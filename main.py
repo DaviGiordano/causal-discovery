@@ -9,7 +9,8 @@ from utils.plot import (
 import logging
 from utils.algorithm import run_causal_discovery
 import argparse
-import logging
+import mlflow
+from utils.metrics import get_graph_confusion
 
 
 def load_data_true_g(data_tag):
@@ -25,17 +26,50 @@ def load_config(algorithm_tag):
 
 
 def main(algorithm_tag, data_tag):
+    # 1. Start MLflow and set experiment
+    mlflow.set_tracking_uri("file:./mlruns")
+    mlflow.set_experiment(data_tag)
 
-    logger, log_dir = setup_logging(algorithm_tag, data_tag)
-    data, true_g = load_data_true_g(data_tag)
-    config = load_config(algorithm_tag)
+    # 2. Start run with algorithm tag as name
+    with mlflow.start_run(run_name=algorithm_tag):
+        logger, log_dir = setup_logging(algorithm_tag, data_tag)
+        data, true_g = load_data_true_g(data_tag)
+        config = load_config(algorithm_tag)
 
-    est_g = run_causal_discovery(algorithm_tag, data, config)
+        # Log parameters from config
+        mlflow.log_params(config)
 
-    fig_conf = plot_confusion_comparison(
-        true_g, est_g, fpath=str(log_dir / "confusion.png")
-    )
-    fig_graphs = plot_graph_comparison(true_g, est_g, fpath=str(log_dir / "graphs.png"))
+        est_g = run_causal_discovery(algorithm_tag, data, config)
+
+        # Calculate metrics for adjacency, arrows and arrows with circle endpoints
+        metrics = {}
+        for graph_type in ["adj", "arrow", "arrow_ce"]:
+            cm, precision, recall = get_graph_confusion(graph_type, true_g, est_g)
+
+            # 4. Log metrics
+            metrics.update(
+                {
+                    f"{graph_type}_tp": cm[0][0],
+                    f"{graph_type}_fp": cm[0][1],
+                    f"{graph_type}_fn": cm[1][0],
+                    f"{graph_type}_tn": cm[1][1],
+                    f"{graph_type}_precision": precision,
+                    f"{graph_type}_recall": recall,
+                }
+            )
+
+        mlflow.log_metrics(metrics)
+
+        # 5. Log artifacts (confusion matrix and graph plots)
+        fig_conf = plot_confusion_comparison(
+            true_g, est_g, fpath=str(log_dir / "confusion.png")
+        )
+        fig_graphs = plot_graph_comparison(
+            true_g, est_g, fpath=str(log_dir / "graphs.png")
+        )
+
+        mlflow.log_artifact(str(log_dir / "confusion.png"))
+        mlflow.log_artifact(str(log_dir / "graphs.png"))
 
 
 if __name__ == "__main__":
@@ -51,7 +85,5 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-
-    logging.basicConfig(level=logging.INFO)
 
     main(args.algorithm, args.data)

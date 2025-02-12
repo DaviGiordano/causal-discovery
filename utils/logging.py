@@ -6,9 +6,7 @@ from datetime import datetime
 def setup_logging(algorithm_tag: str, data_tag: str):
     """Set up logging configuration"""
     # Create logs directory if it doesn't exist
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    log_dir = Path(f"logs/{algorithm_tag}_{data_tag}_{timestamp}")
+    log_dir = Path(f"logs/{algorithm_tag}_{data_tag}")
     log_dir.mkdir(parents=True, exist_ok=True)
 
     # Configure logging
@@ -17,7 +15,7 @@ def setup_logging(algorithm_tag: str, data_tag: str):
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[logging.FileHandler(log_filename), logging.StreamHandler()],
+        handlers=[logging.FileHandler(log_filename)],  # Remove StreamHandler
     )
     logger = logging.getLogger(__name__)
 

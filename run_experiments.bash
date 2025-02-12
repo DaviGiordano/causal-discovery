@@ -6,5 +6,5 @@ data_tags=("csuite_cat_chain" "csuite_cat_collider" "csuite_cat_to_cts" "csuite_
 
 # Loop through each data tag and run the command
 for data in "${data_tags[@]}"; do
-    python3 main.py --algorithm fci_default --data "$data"
+    python3 main.py --algorithm ges_default --data "$data"
 done
