@@ -1,5 +1,7 @@
 from causallearn.utils.TXT2GeneralGraph import txt2generalgraph
 from omegaconf import OmegaConf
+from causallearn.utils.GraphUtils import GraphUtils
+
 import pandas as pd
 from utils.logging import setup_logging
 from utils.plot import (
@@ -35,11 +37,29 @@ def main(algorithm_tag, data_tag):
         logger, log_dir = setup_logging(algorithm_tag, data_tag)
         data, true_g = load_data_true_g(data_tag)
         config = load_config(algorithm_tag)
-
+        graph_utils = GraphUtils()
         # Log parameters from config
         mlflow.log_params(config)
 
+        # Add debugging for true graph
+
+        logger.info(f"True graph nodes: {graph_utils.graph_string(true_g)}")
+
         est_g = run_causal_discovery(algorithm_tag, data, config)
+
+        # Add debugging for estimated graph
+        logger.info(f"Estimated graph nodes: {graph_utils.graph_string(est_g)}")
+
+        # Add validation before comparison
+        if not est_g.get_nodes() or not true_g.get_nodes():
+            logger.error("One or both graphs have no nodes")
+            return
+
+        if set(true_g.node_map.keys()) != set(est_g.node_map.keys()):
+            logger.error("Graphs have different node structures")
+            logger.error(f"True graph nodes: {set(true_g.node_map.keys())}")
+            logger.error(f"Estimated graph nodes: {set(est_g.node_map.keys())}")
+            return
 
         # Calculate metrics for adjacency, arrows and arrows with circle endpoints
         metrics = {}
