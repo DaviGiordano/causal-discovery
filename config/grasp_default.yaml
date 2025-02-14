@@ -1,0 +1,3 @@
+score_func: local_score_BIC_from_cov
+parameters: null
+depth: 3

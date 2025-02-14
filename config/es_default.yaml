@@ -1,0 +1,6 @@
+search_method: astar
+use_path_extension: True
+use_k_cycle_heuristic: False
+k: 3
+max_parents: null
+super_graph: null

@@ -1,0 +1,4 @@
+random_state: null
+prior_knowledge: null
+apply_prior_knowledge_softly: False
+measure: pwling
