@@ -1,6 +1,12 @@
 data/*
 mlruns/*
+analysis/*
 reporting/*
+scripts/by_dataset/*
+scripts/mlruns/*
+
+prompt.md
+results.md
 
 .venv/*
 .cursorignore
