@@ -2,22 +2,34 @@ from causallearn.graph.ArrowConfusion import ArrowConfusion
 from causallearn.graph.AdjacencyConfusion import AdjacencyConfusion
 
 
-def get_graph_confusion(type, true_g, est_g):
-    """
-    Calculate the confusion matrix, precision, and recall for a given graph type.
+def get_graph_confusion(graph_type, true_g, est_g):
+    """Calculate confusion matrix, precision and recall for different graph representations.
 
-    Parameters:
-    type (str): The type of graph confusion to calculate. Can be "arrow" or "adj".
-    true_g (Graph): The ground truth graph.
-    est_g (Graph): The estimated graph.
+    Args:
+        graph_type (str): Type of graph comparison ('adj', 'arrow', or 'arrow_ce')
+        true_g (GeneralGraph): True graph
+        est_g (GeneralGraph): Estimated graph
 
     Returns:
-    tuple: A tuple containing:
-        - cm (list of list of int): The confusion matrix in the format [[TP, FP], [FN, TN]].
-        - precision (float): The precision of the estimated graph.
-        - recall (float): The recall of the estimated graph.
+        tuple: (confusion_matrix, precision, recall)
     """
-    if type == "arrow":
+    # Validate inputs
+    if not true_g or not est_g:
+        raise ValueError("Both true and estimated graphs must be provided")
+
+    if not true_g.get_nodes() or not est_g.get_nodes():
+        raise ValueError("Both graphs must have nodes")
+
+    # Ensure both graphs have the same nodes
+    true_nodes = set(node.get_name() for node in true_g.get_nodes())
+    est_nodes = set(node.get_name() for node in est_g.get_nodes())
+
+    if true_nodes != est_nodes:
+        raise ValueError(
+            f"Graphs have different nodes.\nTrue: {true_nodes}\nEstimated: {est_nodes}"
+        )
+
+    if graph_type == "arrow":
         arrow = ArrowConfusion(true_g, est_g)
         tp = arrow.get_arrows_tp()
         fp = arrow.get_arrows_fp()
@@ -25,23 +37,47 @@ def get_graph_confusion(type, true_g, est_g):
         tn = arrow.get_arrows_tn()
         precision = round(arrow.get_arrows_precision(), 2)
         recall = round(arrow.get_arrows_recall(), 2)
-    elif type == "arrow_ce":
+
+        try:
+            precision = round(arrow.get_arrows_precision_ce(), 2)
+        except ZeroDivisionError:
+            precision = "err"
+        try:
+            recall = round(arrow.get_arrows_recall_ce(), 2)
+        except ZeroDivisionError:
+            recall = "err"
+
+    elif graph_type == "arrow_ce":
         arrow = ArrowConfusion(true_g, est_g)
         tp = arrow.get_arrows_tp_ce()
         fp = arrow.get_arrows_fp_ce()
         fn = arrow.get_arrows_fn_ce()
         tn = arrow.get_arrows_tn_ce()
-        precision = round(arrow.get_arrows_precision_ce(), 2)
-        recall = round(arrow.get_arrows_recall_ce(), 2)
 
-    elif type == "adj":
+        try:
+            precision = round(arrow.get_arrows_precision_ce(), 2)
+        except ZeroDivisionError:
+            precision = "err"
+        try:
+            recall = round(arrow.get_arrows_recall_ce(), 2)
+        except ZeroDivisionError:
+            recall = "err"
+
+    elif graph_type == "adj":
         adj = AdjacencyConfusion(true_g, est_g)
         tp = adj.get_adj_tp()
         fp = adj.get_adj_fp()
         fn = adj.get_adj_fn()
         tn = adj.get_adj_tn()
-        precision = round(adj.get_adj_precision(), 2)
-        recall = round(adj.get_adj_recall(), 2)
+
+        try:
+            precision = round(adj.get_adj_precision(), 2)
+        except ZeroDivisionError:
+            precision = -1
+        try:
+            recall = round(adj.get_adj_recall(), 2)
+        except ZeroDivisionError:
+            recall = -1
 
     cm = [
         [int(tp), int(fp)],
