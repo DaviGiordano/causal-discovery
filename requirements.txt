@@ -13,3 +13,4 @@ ipykernel
 causal-learn
 mlflow
 omegaconf
+torch
