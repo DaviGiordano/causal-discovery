@@ -14,3 +14,4 @@ causal-learn
 mlflow
 omegaconf
 torch
+gcastle

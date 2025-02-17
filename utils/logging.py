@@ -17,7 +17,7 @@ def setup_logging(algorithm_tag: str, data_tag: str):
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[logging.FileHandler(log_filename)],  # Remove StreamHandler
+        handlers=[logging.FileHandler(log_filename)],
     )
     logger = logging.getLogger(__name__)
 

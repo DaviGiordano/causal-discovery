@@ -4,6 +4,8 @@ from causallearn.search.ConstraintBased.FCI import fci
 from causallearn.search.ConstraintBased.PC import pc
 from causallearn.search.ScoreBased.GES import ges
 from causallearn.search.FCMBased import lingam
+from castle.algorithms import Notears
+import logging
 
 from utils.logging import redirect_stdout_to_logger
 from utils.graph_aux import dag_adj_to_graph
@@ -15,7 +17,7 @@ from utils.validation import (
     GES_REQUIRED_PARAMS,
     ES_REQUIRED_PARAMS,
     DIRECTLINGAM_REQUIRED_PARAMS,
-    RCD_REQUIRED_PARAMS,
+    NOTEARS_REQUIRED_PARAMS,
     validate_params,
 )
 
@@ -139,23 +141,59 @@ def run_grasp(data, config):
     return G
 
 
+@validate_params(NOTEARS_REQUIRED_PARAMS)
+def run_notears(data, config):
+    with redirect_stdout_to_logger():
+        model = Notears(
+            lambda1=config["lambda1"],
+            loss_type=config["loss_type"],
+            max_iter=config["max_iter"],
+            h_tol=config["h_tol"],
+            rho_max=config["rho_max"],
+            w_threshold=config["w_threshold"],
+        )
+        model.learn(data)
+        print(f"Adjacency matrix:\n{model.causal_matrix}")
+
+    graph = dag_adj_to_graph(model.causal_matrix)
+    return graph
+
+
 def run_causal_discovery(algorithm_tag, data, config):
-    algorithm = algorithm_tag.split("_")[0]
-    if algorithm == "pc":
-        G = run_pc(data, config)
-    elif algorithm == "fci":
-        G = run_fci(data, config)
-    elif algorithm == "ges":
-        G = run_ges(data, config)
-    elif algorithm == "es":
-        G = run_es(data, config)
-    elif algorithm == "icalingam":
-        G = run_icalingam(data, config)
-    elif algorithm == "directlingam":
-        G = run_directlingam(data, config)
-    elif algorithm == "grasp":
-        G = run_grasp(data, config)
-    else:
-        raise NotImplementedError(f"{algorithm} was not yet implemented")
+    # Configure logging for castle once at the start
+    castle_logger = logging.getLogger("castle")
+    if castle_logger:  # Only configure if the logger exists
+        castle_logger.setLevel(logging.INFO)
+
+        # Use our existing logger as the handler
+        main_logger = logging.getLogger(__name__)
+        for handler in main_logger.handlers:
+            castle_logger.addHandler(handler)
+
+    try:
+        algorithm = algorithm_tag.split("_")[0]
+        if algorithm == "pc":
+            G = run_pc(data, config)
+        elif algorithm == "fci":
+            G = run_fci(data, config)
+        elif algorithm == "ges":
+            G = run_ges(data, config)
+        elif algorithm == "es":
+            G = run_es(data, config)
+        elif algorithm == "icalingam":
+            G = run_icalingam(data, config)
+        elif algorithm == "directlingam":
+            G = run_directlingam(data, config)
+        elif algorithm == "grasp":
+            G = run_grasp(data, config)
+        elif algorithm == "notears":
+            G = run_notears(data, config)
+        else:
+            raise NotImplementedError(f"{algorithm} was not yet implemented")
+    finally:
+        # Clean up castle logger handlers only if we added them
+        if castle_logger:
+            for handler in castle_logger.handlers:
+                castle_logger.removeHandler(handler)
 
     return G

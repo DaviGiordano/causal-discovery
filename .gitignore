@@ -4,6 +4,7 @@ analysis/*
 reporting/*
 scripts/by_dataset/*
 scripts/mlruns/*
+gcastle/*
 
 prompt.md
 results.md

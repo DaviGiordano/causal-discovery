@@ -51,6 +51,15 @@ RCD_REQUIRED_PARAMS = [
 
 GRASP_REQUIRED_PARAMS = ["score_func", "parameters", "depth"]
 
+NOTEARS_REQUIRED_PARAMS = [
+    "lambda1",
+    "loss_type",
+    "max_iter",
+    "h_tol",
+    "rho_max",
+    "w_threshold",
+]
+
 
 def validate_params(required_params):
     def decorator(func):
