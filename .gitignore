@@ -5,7 +5,7 @@ reporting/*
 scripts/by_dataset/*
 scripts/mlruns/*
 gcastle/*
-
+backup/*
 prompt.md
 results.md
 
