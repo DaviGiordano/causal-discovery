@@ -13,17 +13,9 @@ def get_graph_confusion(graph_type, true_g, est_g):
     Returns:
         tuple: (confusion_matrix, precision, recall)
     """
-    # Validate inputs
-    if not true_g or not est_g:
-        raise ValueError("Both true and estimated graphs must be provided")
 
-    if not true_g.get_nodes() or not est_g.get_nodes():
-        raise ValueError("Both graphs must have nodes")
-
-    # Ensure both graphs have the same nodes
     true_nodes = set(node.get_name() for node in true_g.get_nodes())
     est_nodes = set(node.get_name() for node in est_g.get_nodes())
-
     if true_nodes != est_nodes:
         raise ValueError(
             f"Graphs have different nodes.\nTrue: {true_nodes}\nEstimated: {est_nodes}"
@@ -37,7 +29,6 @@ def get_graph_confusion(graph_type, true_g, est_g):
         tn = arrow.get_arrows_tn()
         precision = round(arrow.get_arrows_precision(), 2)
         recall = round(arrow.get_arrows_recall(), 2)
-
         try:
             precision = round(arrow.get_arrows_precision_ce(), 2)
         except ZeroDivisionError:
