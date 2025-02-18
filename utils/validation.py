@@ -60,6 +60,33 @@ NOTEARS_REQUIRED_PARAMS = [
     "w_threshold",
 ]
 
+DAGGNN_REQUIRED_PARAMS = [
+    "encoder_type",
+    "decoder_type",
+    "encoder_hidden",
+    "latent_dim",
+    "decoder_hidden",
+    "encoder_dropout",
+    "decoder_dropout",
+    "epochs",
+    "k_max_iter",
+    "tau_a",
+    "batch_size",
+    "lr",
+    "lr_decay",
+    "gamma",
+    "init_lambda_a",
+    "init_c_a",
+    "c_a_thresh",
+    "eta",
+    "multiply_h",
+    "h_tolerance",
+    "use_a_connect_loss",
+    "use_a_positiver_loss",
+    "graph_threshold",
+    "optimizer",
+]
+
 
 def validate_params(required_params):
     def decorator(func):
