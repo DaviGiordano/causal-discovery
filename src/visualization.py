@@ -3,6 +3,7 @@ import seaborn as sns
 from io import BytesIO
 from PIL import Image
 from causallearn.utils.GraphUtils import GraphUtils
+from causallearn.graph.GeneralGraph import GeneralGraph
 from typing import Optional
 from src.metrics import Metrics
 from matplotlib.figure import Figure
@@ -10,16 +11,8 @@ from matplotlib.axes import Axes
 
 
 class Plotter:
-    def __init__(self, metrics: Metrics | None):
-        """Initialize plotter with metrics object.
-
-        Args:
-            metrics: Metrics object containing evaluation results
-        """
-        self.metrics = metrics
-        if metrics is not None:
-            self.true_graph = metrics.true_graph
-            self.est_graph = metrics.est_graph
+    def __init__(self):
+        """Initialize plotter with metrics object."""
 
     def plot_confusion(
         self,
@@ -66,6 +59,7 @@ class Plotter:
 
     def plot_confusion_comparison(
         self,
+        metrics_data,
         title: str = "Edge and Arrow Confusion Matrices",
         fpath: Optional[str] = None,
     ) -> Figure:
@@ -78,7 +72,6 @@ class Plotter:
         Returns:
             Matplotlib figure object
         """
-        metrics_data = self.metrics.get_result_metrics()
 
         fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 5))
 
@@ -126,25 +119,61 @@ class Plotter:
 
         return fig
 
-    def plot_graph_comparison(self, fpath: Optional[str] = None) -> Figure:
-        """Plot comparison between true and estimated graphs.
+    def plot_graph(
+        self,
+        graph: GeneralGraph,
+        title: str = "Graph",
+        ax: Optional[Axes] = None,
+        fpath: Optional[str] = None,
+    ) -> Figure:
+        """Plot a single graph.
 
         Args:
+            graph: Graph to plot
+            title: Title for the plot
+            ax: Optional matplotlib axes to plot on
             fpath: Optional path to save the figure
 
         Returns:
             Matplotlib figure object
         """
-        # Convert true graph to image
-        true_pyd = GraphUtils.to_pydot(self.true_graph)
-        true_pyd.set_rankdir("LR")
-        true_g_img = Image.open(BytesIO(true_pyd.create_png()))
+        # Convert graph to image
+        pyd = GraphUtils.to_pydot(graph)
+        pyd.set_rankdir("LR")
+        graph_img = Image.open(BytesIO(pyd.create_png()))
 
-        # Convert estimated graph to image
-        estimated_pyd = GraphUtils.to_pydot(self.est_graph)
-        estimated_pyd.set_rankdir("LR")
-        est_g_img = Image.open(BytesIO(estimated_pyd.create_png()))
+        if ax is None:
+            fig = plt.figure(figsize=(6, 5))
+            ax = plt.gca()
+        else:
+            fig = ax.figure
 
+        # Plot graph
+        ax.imshow(graph_img)
+        ax.axis("off")
+        ax.set_title(title)
+
+        if fpath:
+            fig.savefig(fpath)
+
+        return fig
+
+    def plot_graph_comparison(
+        self,
+        graph1: GeneralGraph,
+        graph2: GeneralGraph,
+        fpath: Optional[str] = None,
+    ) -> Figure:
+        """Plot comparison between true and estimated graphs.
+
+        Args:
+            graph1: First graph (typically true graph)
+            graph2: Second graph (typically estimated graph)
+            fpath: Optional path to save the figure
+
+        Returns:
+            Matplotlib figure object
+        """
         # Create figure with two subplots
         fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(12, 6))
         fig.subplots_adjust(wspace=0.05)
@@ -154,15 +183,9 @@ class Plotter:
         divider.axvline(0.5, color="black", linewidth=1)
         divider.axis("off")
 
-        # Plot true graph
-        ax_left.imshow(true_g_img)
-        ax_left.axis("off")
-        ax_left.set_title("True Graph")
-
-        # Plot estimated graph
-        ax_right.imshow(est_g_img)
-        ax_right.axis("off")
-        ax_right.set_title("Estimated Graph")
+        # Plot both graphs using plot_graph
+        self.plot_graph(graph1, title="True Graph", ax=ax_left)
+        self.plot_graph(graph2, title="Estimated Graph", ax=ax_right)
 
         if fpath:
             fig.savefig(fpath)
