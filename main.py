@@ -103,16 +103,16 @@ def main():
     plotter = Plotter()
     plotter.plot_confusion_comparison(
         metrics_data=metrics.get_result_metrics(),
-        title=f"Confusion Matrices - {args.algorithm_config}",
+        title=f"Confusion Matrices - {args.algorithm_config} - {args.dataset_config}",
         fpath=f"{output_dir}/confusion_matrices.png",
     )
     plotter.plot_graph(
-        title="True Graph",
+        title=f"True Graph - {args.dataset_config}",
         graph=true_graph,
         fpath=f"{output_dir}/true_graph.png",
     )
     plotter.plot_graph(
-        title="Estimated Graph",
+        title=f"Estimated Graph - {args.algorithm_config} - {args.dataset_config}",
         graph=est_graph,
         fpath=f"{output_dir}/est_graph.png",
     )
@@ -120,6 +120,7 @@ def main():
         graph1=true_graph,
         graph2=est_graph,
         fpath=f"{output_dir}/graph_comparison.png",
+        title=f"Graph Comparison - {args.algorithm_config} - {args.dataset_config}",
     )
 
     # Log to MLflow

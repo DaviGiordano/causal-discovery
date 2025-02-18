@@ -163,6 +163,7 @@ class Plotter:
         graph1: GeneralGraph,
         graph2: GeneralGraph,
         fpath: Optional[str] = None,
+        title: str = "Graph comparison",
     ) -> Figure:
         """Plot comparison between true and estimated graphs.
 
@@ -186,6 +187,8 @@ class Plotter:
         # Plot both graphs using plot_graph
         self.plot_graph(graph1, title="True Graph", ax=ax_left)
         self.plot_graph(graph2, title="Estimated Graph", ax=ax_right)
+
+        fig.suptitle(title, fontsize=14)
 
         if fpath:
             fig.savefig(fpath)
