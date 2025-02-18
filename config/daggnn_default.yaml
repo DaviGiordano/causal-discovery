@@ -1,0 +1,25 @@
+encoder_type: 'mlp' 
+decoder_type: 'mlp'
+encoder_hidden: 64 
+latent_dim: None 
+decoder_hidden: 64
+encoder_dropout: 0.0 
+decoder_dropout: 0.0 
+epochs: 300 
+k_max_iter: 1e2 
+tau_a: 0.0
+batch_size: 100 
+lr: 3e-3 
+lr_decay: 200 
+gamma: 1.0 
+init_lambda_a: 0.0 
+init_c_a: 1.0
+c_a_thresh: 1e20 
+eta: 10 
+multiply_h: 0.25 
+h_tolerance: 1e-8
+use_a_connect_loss: False 
+use_a_positiver_loss: False 
+graph_threshold: 0.3
+optimizer: 'adam'
+
