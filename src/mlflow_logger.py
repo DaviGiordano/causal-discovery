@@ -1,6 +1,7 @@
 import mlflow
 import pathlib
 from typing import Any, Dict
+from flatten_dict import flatten
 import logging
 
 logger = logging.getLogger(__name__)
@@ -24,35 +25,13 @@ class MLflowLogger:
             raise
 
     def log_run(
-        self,
-        run_name: str,
-        algorithm_params: Dict[str, Any],
-        data_params: Dict[str, Any],
-        metrics_results: Dict[str, Any],
-        artifacts_dir: pathlib.Path,
+        self, run_name: str, params: Dict, metrics: Dict, artifacts_dir: str
     ) -> None:
-        """
-        Log a single experiment run to MLflow.
-
-        Args:
-            run_name: Name of the run
-            algorithm_params: Algorithm configuration parameters
-            data_params: Dataset parameters
-            metrics_results: Results from the experiment
-            artifacts_dir: Directory containing artifacts to log (plots, etc.)
-        """
+        """Log a single experiment run to MLflow."""
         try:
             with mlflow.start_run(run_name=run_name):
-                # Log parameters
-                self._log_parameters(
-                    algorithm_params=algorithm_params,
-                    data_params=data_params,
-                )
-
-                # Log metrics
-                self._log_metrics(metrics_results)
-
-                # Log plot images
+                self._log_params(params=params)
+                self._log_metrics(metrics)
                 self._log_plot_images(artifacts_dir)
 
                 logger.info(f"Successfully logged run '{run_name}' to MLflow")
@@ -61,28 +40,23 @@ class MLflowLogger:
             logger.error(f"Failed to log run to MLflow: {str(e)}")
             raise
 
-    def _log_parameters(
+    def _log_params(
         self,
-        algorithm_params: Dict[str, Any],
-        data_params: Dict[str, Any],
+        params: Dict[str, Any],
     ) -> None:
-        """Log parameters with appropriate prefixes."""
-        # Log algorithm parameters
-        for key, value in algorithm_params.items():
-            mlflow.log_param(f"algorithm_{key}", value)
-
-        # Log data parameters
-        for key, value in data_params.items():
-            mlflow.log_param(f"data_{key}", value)
+        """Log params."""
+        for key, value in flatten(params, reducer="dot").items():
+            mlflow.log_param(key, value)
 
     def _log_metrics(self, metrics_results: Dict[str, Any]) -> None:
-        """Log metrics from different categories."""
-        for category, metrics in metrics_results.items():
-            if isinstance(metrics, dict):
-                for metric_name, value in metrics.items():
-                    # Skip confusion matrices
-                    if metric_name != "confusion_matrix":
-                        mlflow.log_metric(f"{category}_{metric_name}", value)
+        """Flatten a nested metrics dict and log each metric."""
+        for key, value in flatten(metrics_results, reducer="dot").items():
+            if not isinstance(value, (str, int, float)):
+                logger.warning(
+                    f"Skipped logging metric '{key}' as it is not a string or a real number."
+                )
+                continue
+            mlflow.log_metric(key, value)
 
     def _log_plot_images(self, artifacts_dir: pathlib.Path) -> None:
         """Log PNG plot images from the specified directory."""

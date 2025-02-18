@@ -1,4 +1,5 @@
 import pathlib
+import time
 from src.metrics import Metrics
 from src.causal_discovery.causallearn_algorithms import (
     PCAlgorithm,
@@ -9,12 +10,13 @@ from src.causal_discovery.causallearn_algorithms import (
     DirectLiNGAMAlgorithm,
     GRaSPAlgorithm,
 )
-from src.causal_discovery.castle_algorithms import (
-    NOTEARSAlgorithm,
-    DAGGNNAlgorithm,
-    CORLAlgorithm,
-    GraNDAGAlgorithm,
-)
+
+# from src.causal_discovery.castle_algorithms import (
+#     NOTEARSAlgorithm,
+#     DAGGNNAlgorithm,
+#     CORLAlgorithm,
+#     GraNDAGAlgorithm,
+# )
 from src.load_parse import load_csv, load_yaml, parse_arguments
 from src.graph_aux import dag_adj_to_graph
 from src.visualization import Plotter
@@ -43,14 +45,14 @@ def get_discovery_algorithm(algorithm_params: dict):
         return DirectLiNGAMAlgorithm(config_params)
     elif algorithm == "grasp":
         return GRaSPAlgorithm(config_params)
-    elif algorithm == "notears":
-        return NOTEARSAlgorithm(config_params)
-    elif algorithm == "dag_gnn":
-        return DAGGNNAlgorithm(config_params)
-    elif algorithm == "corl":
-        return CORLAlgorithm(config_params)
-    elif algorithm == "grandag":
-        return GraNDAGAlgorithm(config_params)
+    # elif algorithm == "notears":
+    #     return NOTEARSAlgorithm(config_params)
+    # elif algorithm == "dag_gnn":
+    #     return DAGGNNAlgorithm(config_params)
+    # elif algorithm == "corl":
+    #     return CORLAlgorithm(config_params)
+    # elif algorithm == "grandag":
+    #     return GraNDAGAlgorithm(config_params)
     else:
         raise NotImplementedError(f"{algorithm} was not yet implemented")
 
@@ -75,13 +77,16 @@ def main():
     algorithm_params = load_yaml(ALL_ALGORITHMS_CONFIGS)[args.algorithm_config]
     model = get_discovery_algorithm(algorithm_params)
 
-    # Train model to discover causal structure
+    # Train model to discover causal structure and measure time
+    start_time = time.time()
     model.train(data)
+    training_time = time.time() - start_time
     est_graph = model.est_graph
 
     # Evaluate and get metrics
     metrics = Metrics(true_graph, est_graph)
     metrics_results = metrics.get_result_metrics()
+    metrics_results["train_time"] = round(training_time, 2)
 
     # Setup output directory
     output_dir = pathlib.Path(f"results/{args.dataset_config}/{args.algorithm_config}")
@@ -90,9 +95,8 @@ def main():
     # Log experiment parameters and results to JSON
     log_experiment_results(
         output_dir=output_dir,
-        algorithm_params=algorithm_params,
-        data_params=data_params,
-        metrics_results=metrics_results,
+        params=algorithm_params,
+        metrics=metrics_results,
     )
 
     # Generate and save plots
@@ -106,9 +110,8 @@ def main():
     # Log to MLflow
     mlflow_logger.log_run(
         run_name=args.algorithm_config,
-        algorithm_params=algorithm_params,
-        data_params=data_params,
-        metrics_results=metrics_results,
+        params=algorithm_params,
+        metrics=metrics_results,
         artifacts_dir=output_dir,
     )
 

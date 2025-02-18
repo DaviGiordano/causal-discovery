@@ -2,15 +2,15 @@ import json
 import pathlib
 import logging
 from typing import Any, Dict
+from flatten_dict import flatten
 
 logger = logging.getLogger(__name__)
 
 
 def log_experiment_results(
     output_dir: pathlib.Path,
-    algorithm_params: Dict[str, Any],
-    data_params: Dict[str, Any],
-    metrics_results: Dict[str, Any],
+    params: Dict[str, Any],
+    metrics: Dict[str, Any],
 ) -> None:
     """
     Log experiment parameters and results as JSON files in the output directory.
@@ -25,9 +25,8 @@ def log_experiment_results(
 
     # Create log files
     log_files = {
-        "algorithm_params.json": algorithm_params,
-        "data_params.json": data_params,
-        "metrics_results.json": metrics_results,
+        "params.json": flatten(params, reducer="dot"),
+        "metrics.json": flatten(metrics, reducer="dot"),
     }
 
     # Save each log file
