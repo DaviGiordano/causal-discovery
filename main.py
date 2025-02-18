@@ -100,12 +100,27 @@ def main():
     )
 
     # Generate and save plots
-    plotter = Plotter(metrics)
+    plotter = Plotter()
     plotter.plot_confusion_comparison(
+        metrics_data=metrics.get_result_metrics(),
         title=f"Confusion Matrices - {args.algorithm_config}",
         fpath=f"{output_dir}/confusion_matrices.png",
     )
-    plotter.plot_graph_comparison(fpath=f"{output_dir}/graph_comparison.png")
+    plotter.plot_graph(
+        title="True Graph",
+        graph=true_graph,
+        fpath=f"{output_dir}/true_graph.png",
+    )
+    plotter.plot_graph(
+        title="Estimated Graph",
+        graph=est_graph,
+        fpath=f"{output_dir}/est_graph.png",
+    )
+    plotter.plot_graph_comparison(
+        graph1=true_graph,
+        graph2=est_graph,
+        fpath=f"{output_dir}/graph_comparison.png",
+    )
 
     # Log to MLflow
     mlflow_logger.log_run(
