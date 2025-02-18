@@ -1,6 +1,6 @@
 data/*
 mlruns/*
-analysis/*
+results/*
 reporting/*
 scripts/by_dataset/*
 scripts/mlruns/*

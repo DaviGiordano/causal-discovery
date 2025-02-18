@@ -1,0 +1,75 @@
+dag_gnn_default:
+    algorithm: dag_gnn
+    device_type: gpu
+
+corl_default:
+    algorithm: corl
+    device_type: gpu
+
+notears_default:
+    algorithm: notears
+
+grandag_default:
+    algorithm: grandag
+    device_type: gpu
+
+pc_default:
+    algorithm: pc
+    alpha: 0.05
+    indep_test: fisherz
+    stable: True
+    uc_rule: 0
+    uc_priority: 2
+    mvpc: False
+    correction_name: MV_crtn_fisher_z
+    background_knowledge: null
+
+directlingam_default:
+    algorithm: directlingam
+    random_state: null
+    prior_knowledge: null
+    apply_prior_knowledge_softly: False
+    measure: pwling
+
+icalingam_default:
+    algorithm: icalingam
+    random_state: null
+    max_iter: 1000
+
+es_default:
+    algorithm: es
+    search_method: astar
+    use_path_extension: True
+    use_k_cycle_heuristic: False
+    k: 3
+    max_parents: null
+    super_graph: null
+
+fci_default:
+    algorithm: fci
+    alpha: 0.05
+    independence_test_method: fisherz
+    depth: -1
+    max_path_length: -1
+    background_knowledge: null
+
+ges_default:
+    algorithm: ges
+    score_func: local_score_BIC
+    maxP: null
+    parameters: null
+
+grasp_default:
+    algorithm: grasp
+    score_func: local_score_BIC_from_cov
+    parameters: null
+    depth: 3
+    
+notears_default:
+    algorithm: notears
+    lambda1: 0.01
+    loss_type: l2
+    max_iter: 100
+    h_tol: 1e-8
+    rho_max: 1e+16
+    w_threshold: 0.3
