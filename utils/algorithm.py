@@ -4,7 +4,7 @@ from causallearn.search.ConstraintBased.FCI import fci
 from causallearn.search.ConstraintBased.PC import pc
 from causallearn.search.ScoreBased.GES import ges
 from causallearn.search.FCMBased import lingam
-from castle.algorithms import Notears
+from castle.algorithms import Notears, DAG_GNN
 import logging
 
 from utils.logging import redirect_stdout_to_logger
@@ -143,19 +143,26 @@ def run_grasp(data, config):
 
 @validate_params(NOTEARS_REQUIRED_PARAMS)
 def run_notears(data, config):
-    with redirect_stdout_to_logger():
-        model = Notears(
-            lambda1=config["lambda1"],
-            loss_type=config["loss_type"],
-            max_iter=config["max_iter"],
-            h_tol=config["h_tol"],
-            rho_max=config["rho_max"],
-            w_threshold=config["w_threshold"],
-        )
-        model.learn(data)
-        print(f"Adjacency matrix:\n{model.causal_matrix}")
+    model = Notears(
+        lambda1=config["lambda1"],
+        loss_type=config["loss_type"],
+        max_iter=config["max_iter"],
+        h_tol=config["h_tol"],
+        rho_max=config["rho_max"],
+        w_threshold=config["w_threshold"],
+    )
+    model.learn(data)
+    print(f"Adjacency matrix:\n{model.causal_matrix}")
 
     graph = dag_adj_to_graph(model.causal_matrix)
+    return graph
+
+
+def run_daggnn(data, config):
+    gnn = DAG_GNN(device_type="gpu")
+    gnn.learn(data)
+
+    graph = dag_adj_to_graph(gnn.causal_matrix)
     return graph
 
 
@@ -188,6 +195,8 @@ def run_causal_discovery(algorithm_tag, data, config):
             G = run_grasp(data, config)
         elif algorithm == "notears":
             G = run_notears(data, config)
+        elif algorithm == "daggnn":
+            G = run_daggnn(data, config)
         else:
             raise NotImplementedError(f"{algorithm} was not yet implemented")
     finally:
