@@ -11,12 +11,12 @@ from src.causal_discovery.causallearn_algorithms import (
     GRaSPAlgorithm,
 )
 
-# from src.causal_discovery.castle_algorithms import (
-#     NOTEARSAlgorithm,
-#     DAGGNNAlgorithm,
-#     CORLAlgorithm,
-#     GraNDAGAlgorithm,
-# )
+from src.causal_discovery.castle_algorithms import (
+    NOTEARSAlgorithm,
+    DAGGNNAlgorithm,
+    CORLAlgorithm,
+    GraNDAGAlgorithm,
+)
 from src.load_parse import load_csv, load_yaml, parse_arguments
 from src.graph_aux import dag_adj_to_graph
 from src.visualization import Plotter
@@ -45,14 +45,14 @@ def get_discovery_algorithm(algorithm_params: dict):
         return DirectLiNGAMAlgorithm(config_params)
     elif algorithm == "grasp":
         return GRaSPAlgorithm(config_params)
-    # elif algorithm == "notears":
-    #     return NOTEARSAlgorithm(config_params)
-    # elif algorithm == "dag_gnn":
-    #     return DAGGNNAlgorithm(config_params)
-    # elif algorithm == "corl":
-    #     return CORLAlgorithm(config_params)
-    # elif algorithm == "grandag":
-    #     return GraNDAGAlgorithm(config_params)
+    elif algorithm == "notears":
+        return NOTEARSAlgorithm(config_params)
+    elif algorithm == "dag_gnn":
+        return DAGGNNAlgorithm(config_params)
+    elif algorithm == "corl":
+        return CORLAlgorithm(config_params)
+    elif algorithm == "grandag":
+        return GraNDAGAlgorithm(config_params)
     else:
         raise NotImplementedError(f"{algorithm} was not yet implemented")
 
