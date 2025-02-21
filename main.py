@@ -1,3 +1,4 @@
+import os
 import pathlib
 import time
 from dotenv import load_dotenv
@@ -65,7 +66,10 @@ def main():
     args = parse_arguments()
 
     # Setup MLflow logging
-    mlflow_logger = MLflowLogger(experiment_name=args.dataset_config)
+    mlflow_logger = MLflowLogger(
+        experiment_name=args.dataset_config,
+        mlflow_tracking_uri=os.getenv("MLFLOW_TRACKING_URI"),
+    )
 
     # Load data and ground truth adj matrix
     data_params = load_yaml(ALL_DATA_CONFIGS)[args.dataset_config]

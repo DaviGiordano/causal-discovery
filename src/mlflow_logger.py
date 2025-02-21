@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class MLflowLogger:
-    def __init__(self, experiment_name: str):
+    def __init__(self, experiment_name: str, mlflow_tracking_uri: str):
         """
         Initialize MLflow logger with experiment name.
 
@@ -18,17 +18,10 @@ class MLflowLogger:
             experiment_name: Name of the MLflow experiment
         """
         self.experiment_name = experiment_name
-        try:
-            dagshub.init(
-                repo_owner=os.getenv("DAGSHUB_REPO_OWNER"),
-                repo_name=os.getenv("DAGSHUB_REPO_NAME"),
-                mlflow=True,
-            )
-            mlflow.set_experiment(experiment_name)
+        self.mlflow_tracking_uri = mlflow_tracking_uri
 
-        except Exception as e:
-            logger.error(f"Failed to set MLflow experiment: {str(e)}")
-            raise
+        self._configure_mlfow(self.mlflow_tracking_uri)
+        mlflow.set_experiment(experiment_name)
 
     def log_run(
         self,
@@ -79,3 +72,24 @@ class MLflowLogger:
                     logger.info(f"Logged plot: {png_file.name}")
                 except Exception as e:
                     logger.error(f"Failed to log plot {png_file.name}: {str(e)}")
+
+    def _configure_mlfow(self, uri: str, fallback_path: str = "./mlruns"):
+        """Configure MLflow tracking URI, falling back to local storage if needed."""
+        try:
+            mlflow.set_tracking_uri(uri)
+            logger.info(f"MLflow tracking URI set to: {uri}")
+            return
+        except Exception as e:
+            logger.warning(f"Failed to set MLflow tracking URI ({uri}): {str(e)}")
+
+        # Fallback to local file storage
+        local_uri = f"file://{os.path.abspath(fallback_path)}"
+        try:
+            mlflow.set_tracking_uri(local_uri)
+            logger.info(f"Falling back to local MLflow tracking at: {local_uri}")
+            return
+        except Exception as e_local:
+            logger.error(
+                f"Failed to set local MLflow tracking at {local_uri}: {str(e_local)}"
+            )
+            raise
