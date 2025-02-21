@@ -20,7 +20,11 @@ class MLflowLogger:
         self.experiment_name = experiment_name
         self.mlflow_tracking_uri = mlflow_tracking_uri
 
-        self._configure_mlfow(self.mlflow_tracking_uri)
+        if self.mlflow_tracking_uri:
+            self._configure_mlfow(self.mlflow_tracking_uri)
+        else:
+            self._configure_mlfow('"./mlruns"')
+
         mlflow.set_experiment(experiment_name)
 
     def log_run(
@@ -34,8 +38,10 @@ class MLflowLogger:
         """Log a single experiment run to MLflow."""
         try:
             with mlflow.start_run(run_name=run_name):
+
+                mlflow.log_param(key="dataset", value=dataset_name)
+
                 self._log_params(params=params)
-                mlflow.log_param(key="Dataset", value=dataset_name)
                 self._log_metrics(metrics)
                 self._log_plot_images(artifacts_dir)
 
@@ -73,7 +79,7 @@ class MLflowLogger:
                 except Exception as e:
                     logger.error(f"Failed to log plot {png_file.name}: {str(e)}")
 
-    def _configure_mlfow(self, uri: str, fallback_path: str = "./mlruns"):
+    def _configure_mlfow(self, uri: str):
         """Configure MLflow tracking URI, falling back to local storage if needed."""
         try:
             mlflow.set_tracking_uri(uri)
@@ -81,15 +87,4 @@ class MLflowLogger:
             return
         except Exception as e:
             logger.warning(f"Failed to set MLflow tracking URI ({uri}): {str(e)}")
-
-        # Fallback to local file storage
-        local_uri = f"file://{os.path.abspath(fallback_path)}"
-        try:
-            mlflow.set_tracking_uri(local_uri)
-            logger.info(f"Falling back to local MLflow tracking at: {local_uri}")
-            return
-        except Exception as e_local:
-            logger.error(
-                f"Failed to set local MLflow tracking at {local_uri}: {str(e_local)}"
-            )
             raise
