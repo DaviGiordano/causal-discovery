@@ -18,7 +18,7 @@ class CausalDiscoveryAlgorithm(ABC):
         self.true_adj = None
         self.true_graph = None
         self.est_adj = None
-        self.est_graph = GeneralGraph | None
+        self.est_graph: GeneralGraph | None
         self.metrics: Metrics | None = None
 
     @abstractmethod
