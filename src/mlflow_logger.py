@@ -1,11 +1,12 @@
+import dagshub
 import mlflow
 import pathlib
 from typing import Any, Dict
 from flatten_dict import flatten
 import logging
+import os
 
 logger = logging.getLogger(__name__)
-LOG_PATH = "./mlruns"
 
 
 class MLflowLogger:
@@ -18,19 +19,30 @@ class MLflowLogger:
         """
         self.experiment_name = experiment_name
         try:
-            mlflow.set_tracking_uri(LOG_PATH)
+            dagshub.init(
+                repo_owner=os.getenv("DAGSHUB_REPO_OWNER"),
+                repo_name=os.getenv("DAGSHUB_REPO_NAME"),
+                mlflow=True,
+            )
             mlflow.set_experiment(experiment_name)
+
         except Exception as e:
             logger.error(f"Failed to set MLflow experiment: {str(e)}")
             raise
 
     def log_run(
-        self, run_name: str, params: Dict, metrics: Dict, artifacts_dir: str
+        self,
+        run_name: str,
+        dataset_name: str,
+        params: Dict,
+        metrics: Dict,
+        artifacts_dir: str,
     ) -> None:
         """Log a single experiment run to MLflow."""
         try:
             with mlflow.start_run(run_name=run_name):
                 self._log_params(params=params)
+                mlflow.log_param(key="Dataset", value=dataset_name)
                 self._log_metrics(metrics)
                 self._log_plot_images(artifacts_dir)
 
