@@ -5,9 +5,15 @@ from typing import Dict
 
 
 class Metrics:
-    def __init__(self, true_graph: GeneralGraph, est_graph: GeneralGraph) -> None:
+    def __init__(
+        self,
+        true_graph: GeneralGraph,
+        est_graph: GeneralGraph,
+        training_time: float,
+    ) -> None:
         self.true_graph = true_graph
         self.est_graph = est_graph
+        self.training_time = training_time
         self._validate_graphs()
 
         # Calculate all metrics
@@ -15,6 +21,7 @@ class Metrics:
             "adjacency": self._compute_adjacency_metrics(),
             "arrow": self._compute_arrow_metrics(),
             "arrow_ce": self._compute_arrow_ce_metrics(),
+            "training_time": self.training_time,
         }
 
     def _validate_graphs(self):
