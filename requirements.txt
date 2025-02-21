@@ -15,3 +15,4 @@ torch
 gcastle
 python-dotenv
 flatten-dict
+dagshub
