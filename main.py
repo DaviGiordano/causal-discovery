@@ -1,5 +1,6 @@
 import pathlib
 import time
+from dotenv import load_dotenv
 from src.metrics import Metrics
 from src.causal_discovery.causallearn_algorithms import (
     PCAlgorithm,
@@ -60,8 +61,7 @@ def get_discovery_algorithm(algorithm_params: dict):
 def main():
     # Setup logging
     setup_logging()
-
-    # Parse args
+    load_dotenv(".env")
     args = parse_arguments()
 
     # Setup MLflow logging
@@ -84,9 +84,8 @@ def main():
     est_graph = model.est_graph
 
     # Evaluate and get metrics
-    metrics = Metrics(true_graph, est_graph)
+    metrics = Metrics(true_graph, est_graph, training_time)
     metrics_results = metrics.get_result_metrics()
-    metrics_results["train_time"] = round(training_time, 2)
 
     # Setup output directory
     output_dir = pathlib.Path(f"results/{args.dataset_config}/{args.algorithm_config}")
@@ -104,7 +103,7 @@ def main():
     plotter.plot_confusion_comparison(
         metrics_data=metrics.get_result_metrics(),
         title=f"Confusion Matrices - {args.algorithm_config} - {args.dataset_config}",
-        fpath=f"{output_dir}/confusion_matrices.png",
+        fpath=f"{output_dir}/{args.algorithm_config}_{args.dataset_config}_confusion_matrices.png",
     )
     plotter.plot_graph(
         title=f"True Graph - {args.dataset_config}",
@@ -114,18 +113,19 @@ def main():
     plotter.plot_graph(
         title=f"Estimated Graph - {args.algorithm_config} - {args.dataset_config}",
         graph=est_graph,
-        fpath=f"{output_dir}/est_graph.png",
+        fpath=f"{output_dir}/{args.algorithm_config}_{args.dataset_config}_est_graph.png",
     )
     plotter.plot_graph_comparison(
         graph1=true_graph,
         graph2=est_graph,
-        fpath=f"{output_dir}/graph_comparison.png",
+        fpath=f"{output_dir}/{args.algorithm_config}_{args.dataset_config}_graph_comparison.png",
         title=f"Graph Comparison - {args.algorithm_config} - {args.dataset_config}",
     )
 
     # Log to MLflow
     mlflow_logger.log_run(
         run_name=args.algorithm_config,
+        dataset_name=args.dataset_config,
         params=algorithm_params,
         metrics=metrics_results,
         artifacts_dir=output_dir,
