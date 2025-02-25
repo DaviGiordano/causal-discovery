@@ -4,6 +4,7 @@ from causallearn.search.ScoreBased.GES import ges
 from causallearn.search.ScoreBased.ExactSearch import bic_exact_search
 from causallearn.search.FCMBased import lingam
 from causallearn.search.PermutationBased.GRaSP import grasp
+from causallearn.utils.cit import kci
 
 from src.causal_discovery.CausalDiscoveryAlgorithm import CausalDiscoveryAlgorithm
 from src.graph_aux import dag_adj_to_graph
@@ -20,10 +21,23 @@ class PCAlgorithm(CausalDiscoveryAlgorithm):
         logger.info(msg=f"Running PC with params: {config_params}")
 
     def train(self, data) -> None:
-        cg = pc(
-            data,
-            **self.config_params,
-        )
+        indep_test = self.config_params.pop("indep_test", None)
+        kernel = self.config_params.pop("kernelZ", None)
+        if indep_test == "kci":
+            alpha = self.config_params.pop("alpha", None)
+            cg = pc(
+                data,
+                alpha,  # Has to come before kci
+                kci,
+                kernelZ=kernel,
+                **self.config_params,
+            )
+        else:
+            cg = pc(
+                data,
+                **self.config_params,
+            )
+
         self.est_graph = cg.G
         self.est_adj = None
 
@@ -34,11 +48,24 @@ class FCIAlgorithm(CausalDiscoveryAlgorithm):
         logger.info(msg=f"Running FCI with params: {config_params}")
 
     def train(self, data) -> None:
-        G, edges = fci(
-            data,
-            **self.config_params,
-        )
-        self.est_graph = G
+        indep_test = self.config_params.pop("indep_test", None)
+        kernel = self.config_params.pop("kernelZ", None)
+        if indep_test == "kci":
+            alpha = self.config_params.pop("alpha", None)
+            cg = fci(
+                data,
+                alpha,  # Has to come before kci
+                kci,
+                kernelZ=kernel,
+                **self.config_params,
+            )
+        else:
+            cg = fci(
+                data,
+                **self.config_params,
+            )
+
+        self.est_graph = cg.G
         self.est_adj = None
 
 
