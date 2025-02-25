@@ -23,7 +23,7 @@ class MLflowLogger:
         if self.mlflow_tracking_uri:
             self._configure_mlfow(self.mlflow_tracking_uri)
         else:
-            self._configure_mlfow('"./mlruns"')
+            self._configure_mlfow("./mlruns")
 
         mlflow.set_experiment(experiment_name)
 
