@@ -24,6 +24,18 @@ pc_default:
     correction_name: MV_crtn_fisher_z
     background_knowledge: null
 
+pc_kci_gaussian:
+    algorithm: pc
+    alpha: 0.05
+    stable: True
+    uc_rule: 0
+    uc_priority: 2
+    mvpc: False
+    correction_name: MV_crtn_fisher_z
+    background_knowledge: null
+    indep_test: kci
+    kernelZ: Gaussian # Documentation is wrong, value should be Gaussian and not GaussianKernel
+
 directlingam_default:
     algorithm: directlingam
     random_state: null
@@ -52,6 +64,16 @@ fci_default:
     depth: -1
     max_path_length: -1
     background_knowledge: null
+    
+fci_kci_gaussian:
+    algorithm: fci
+    alpha: 0.05
+    independence_test_method: fisherz
+    depth: -1
+    max_path_length: -1
+    background_knowledge: null
+    indep_test: kci
+    kernelZ: Gaussian # Documentation is wrong, value should be Gaussian and not GaussianKernel
 
 ges_default:
     algorithm: ges
@@ -59,9 +81,21 @@ ges_default:
     maxP: null
     parameters: null
 
+ges_marginal_general:
+    algorithm: ges
+    score_func: local_score_marginal_general
+    maxP: null
+    parameters: null
+
 grasp_default:
     algorithm: grasp
-    score_func: local_score_BIC_from_cov
+    score_func: local_score_BIC
+    parameters: null
+    depth: 3
+
+grasp_marginal_general:
+    algorithm: grasp
+    score_func: local_score_marginal_general
     parameters: null
     depth: 3
     
