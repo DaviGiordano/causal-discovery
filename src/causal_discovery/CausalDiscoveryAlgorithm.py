@@ -8,9 +8,6 @@ from src.logging_config import setup_logging
 from src.metrics import Metrics
 from src.visualization import Plotter
 
-setup_logging()
-logger = logging.getLogger(__name__)
-
 
 class CausalDiscoveryAlgorithm(ABC):
     def __init__(self, config_params):

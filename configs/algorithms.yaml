@@ -1,75 +1,158 @@
-dag_gnn_default:
-    algorithm: dag_gnn
-    device_type: gpu
+pc_fisherz_005:
+    algorithm_name: pc
+    algorithm_params:
+        alpha: 0.05
+        indep_test: fisherz
 
-corl_default:
-    algorithm: corl
-    device_type: gpu
+pc_fisherz_01:
+    algorithm_name: pc
+    algorithm_params:
+        alpha: 0.1
+        indep_test: fisherz
 
-notears_default:
-    algorithm: notears
+pc_kcigaussian_005:
+    algorithm_name: pc
+    algorithm_params:
+        alpha: 0.05
+        indep_test: kci
+        kernelX: Gaussian
+        kernelY: Gaussian
+        kernelZ: Gaussian
 
-grandag_default:
-    algorithm: grandag
-    device_type: gpu
+pc_kcigaussian_01:
+    algorithm_name: pc
+    algorithm_params:
+        alpha: 0.1
+        indep_test: kci
+        kernelX: Gaussian
+        kernelY: Gaussian
+        kernelZ: Gaussian
 
-pc_default:
-    algorithm: pc
-    alpha: 0.05
-    indep_test: fisherz
-    stable: True
-    uc_rule: 0
-    uc_priority: 2
-    mvpc: False
-    correction_name: MV_crtn_fisher_z
-    background_knowledge: null
+fci_fisherz_005:
+    algorithm_name: fci
+    algorithm_params:
+        alpha: 0.05
+        indep_test: fisherz
 
-directlingam_default:
-    algorithm: directlingam
-    random_state: null
-    prior_knowledge: null
-    apply_prior_knowledge_softly: False
-    measure: pwling
+fci_fisherz_01:
+    algorithm_name: fci
+    algorithm_params:
+        alpha: 0.1
+        indep_test: fisherz
 
-icalingam_default:
-    algorithm: icalingam
-    random_state: null
-    max_iter: 1000
+fci_kcigaussian_005:
+    algorithm_name: fci
+    algorithm_params:
+        alpha: 0.05
+        indep_test: kci
+        kernelX: Gaussian
+        kernelY: Gaussian
+        kernelZ: Gaussian
 
-es_default:
-    algorithm: es
-    search_method: astar
-    use_path_extension: True
-    use_k_cycle_heuristic: False
-    k: 3
-    max_parents: null
-    super_graph: null
+fci_kcigaussian_01:
+    algorithm_name: fci
+    algorithm_params:
+        alpha: 0.1
+        indep_test: kci
+        kernelX: Gaussian
+        kernelY: Gaussian
+        kernelZ: Gaussian
 
-fci_default:
-    algorithm: fci
-    alpha: 0.05
-    independence_test_method: fisherz
-    depth: -1
-    max_path_length: -1
-    background_knowledge: null
+ges_bic:
+    algorithm_name: ges
+    algorithm_params:
+        score_func: local_score_BIC
 
-ges_default:
-    algorithm: ges
-    score_func: local_score_BIC
-    maxP: null
-    parameters: null
+ges_bdeu:
+    algorithm_name: ges
+    algorithm_params:
+        score_func: local_score_BDeu
 
-grasp_default:
-    algorithm: grasp
-    score_func: local_score_BIC_from_cov
-    parameters: null
-    depth: 3
-    
-notears_default:
-    algorithm: notears
-    lambda1: 0.01
-    loss_type: l2
-    max_iter: 100
-    h_tol: 1e-8
-    rho_max: 1e+16
-    w_threshold: 0.3
+ges_margigeneral:
+    algorithm_name: ges
+    algorithm_params:
+        score_func: local_score_marginal_general
+
+ges_margimulti:
+    algorithm_name: ges
+    algorithm_params:
+        score_func: local_score_marginal_multi
+
+grasp_bic:
+    algorithm_name: grasp
+    algorithm_params:
+        score_func: local_score_BIC
+
+grasp_bdeu:
+    algorithm_name: grasp
+    algorithm_params:
+        score_func: local_score_BDeu
+
+grasp_margigeneral:
+    algorithm_name: grasp
+    algorithm_params:
+        score_func: local_score_marginal_general
+
+grasp_margimulti:
+    algorithm_name: grasp
+    algorithm_params:
+        score_func: local_score_marginal_multi
+        
+boss_bic:
+    algorithm_name: boss
+    algorithm_params:
+        score_func: local_score_BIC
+
+boss_bdeu:
+    algorithm_name: boss
+    algorithm_params:
+        score_func: local_score_BDeu
+
+boss_margigeneral:
+    algorithm_name: boss
+    algorithm_params:
+        score_func: local_score_marginal_general
+
+boss_margimulti:
+    algorithm_name: boss
+    algorithm_params:
+        score_func: local_score_marginal_multi
+        
+directlingam_pwling:
+    algorithm_name: directlingam
+    algorithm_params:
+        measure: pwling
+
+directlingam_kernel:
+    algorithm_name: directlingam
+    algorithm_params:
+        measure: kernel
+
+# notears_default:
+#     algorithm_name: notears
+#     algorithm_params:
+#         lambda1: 0.01
+#         loss_type: l2
+#         max_iter: 100
+#         h_tol: 1e-8
+#         rho_max: 1e+16
+#         w_threshold: 0.3
+
+# dag_gnn_default:
+#     algorithm_name: dag_gnn
+#     algorithm_params:
+#         device_type: gpu
+
+# corl_default:
+#     algorithm_name: corl
+#     algorithm_params:
+#         device_type: gpu
+
+# notears_default:
+#     algorithm_name: notears
+#     algorithm_params:
+
+# grandag_default:
+#     algorithm_name: grandag
+#     algorithm_params:
+#         device_type: gpu

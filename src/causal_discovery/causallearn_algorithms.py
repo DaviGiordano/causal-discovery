@@ -4,13 +4,14 @@ from causallearn.search.ScoreBased.GES import ges
 from causallearn.search.ScoreBased.ExactSearch import bic_exact_search
 from causallearn.search.FCMBased import lingam
 from causallearn.search.PermutationBased.GRaSP import grasp
+from causallearn.search.PermutationBased.BOSS import boss
 
 from src.causal_discovery.CausalDiscoveryAlgorithm import CausalDiscoveryAlgorithm
 from src.graph_aux import dag_adj_to_graph
 from src.logging_config import setup_logging
 import logging
 
-setup_logging()
+# setup_logging()
 logger = logging.getLogger(__name__)
 
 
@@ -105,6 +106,20 @@ class GRaSPAlgorithm(CausalDiscoveryAlgorithm):
 
     def train(self, data) -> None:
         G = grasp(
+            data,
+            **self.config_params,
+        )
+        self.est_graph = G
+        self.est_adj = None
+
+
+class BossAlgorithm(CausalDiscoveryAlgorithm):
+    def __init__(self, config_params):
+        super().__init__(config_params)
+        logger.info(msg=f"Running BOSS with params: {config_params}")
+
+    def train(self, data) -> None:
+        G = boss(
             data,
             **self.config_params,
         )

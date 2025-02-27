@@ -5,7 +5,7 @@ import yaml
 from src.logging_config import setup_logging
 import logging
 
-setup_logging()
+# setup_logging()
 logger = logging.getLogger(__name__)
 
 
@@ -13,14 +13,14 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "--algorithm_config",
+        "--algorithm_tag",
         type=str,
         required=True,
         help="Add tag for algorithm configuration from configs/algorithms.yaml",
     )
 
     parser.add_argument(
-        "--dataset_config",
+        "--dataset_tag",
         type=str,
         required=True,
         help="Add tag for dataset from configs/data.yaml",

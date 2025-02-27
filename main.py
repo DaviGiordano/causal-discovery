@@ -1,6 +1,7 @@
 import os
 import pathlib
 import time
+import logging
 from dotenv import load_dotenv
 from src.metrics import Metrics
 from src.causal_discovery.causallearn_algorithms import (
@@ -11,6 +12,7 @@ from src.causal_discovery.causallearn_algorithms import (
     ICALiNGAMAlgorithm,
     DirectLiNGAMAlgorithm,
     GRaSPAlgorithm,
+    BossAlgorithm,
 )
 
 from src.causal_discovery.castle_algorithms import (
@@ -27,113 +29,126 @@ from src.logging_config import setup_logging
 from src.mlflow_logger import MLflowLogger
 
 ALL_ALGORITHMS_CONFIGS = "./configs/algorithms.yaml"
-ALL_DATA_CONFIGS = "./configs/data.yaml"
+ALL_DATA_CONFIGS = "./configs/dataset.yaml"
 
 
-def get_discovery_algorithm(algorithm_params: dict):
-    config_params = algorithm_params.copy()
-    algorithm = config_params.pop("algorithm")
-    if algorithm == "pc":
-        return PCAlgorithm(config_params)
-    elif algorithm == "fci":
-        return FCIAlgorithm(config_params)
-    elif algorithm == "ges":
-        return GESAlgorithm(config_params)
-    elif algorithm == "es":
-        return ExactSearchAlgorithm(config_params)
-    elif algorithm == "icalingam":
-        return ICALiNGAMAlgorithm(config_params)
-    elif algorithm == "directlingam":
-        return DirectLiNGAMAlgorithm(config_params)
-    elif algorithm == "grasp":
-        return GRaSPAlgorithm(config_params)
-    elif algorithm == "notears":
-        return NOTEARSAlgorithm(config_params)
-    elif algorithm == "dag_gnn":
-        return DAGGNNAlgorithm(config_params)
-    elif algorithm == "corl":
-        return CORLAlgorithm(config_params)
-    elif algorithm == "grandag":
-        return GraNDAGAlgorithm(config_params)
+def get_discovery_algorithm(algorithm_name: str, algorithm_params: dict):
+    if algorithm_name == "pc":
+        return PCAlgorithm(algorithm_params)
+    elif algorithm_name == "fci":
+        return FCIAlgorithm(algorithm_params)
+    elif algorithm_name == "ges":
+        return GESAlgorithm(algorithm_params)
+    elif algorithm_name == "es":
+        return ExactSearchAlgorithm(algorithm_params)
+    elif algorithm_name == "icalingam":
+        return ICALiNGAMAlgorithm(algorithm_params)
+    elif algorithm_name == "directlingam":
+        return DirectLiNGAMAlgorithm(algorithm_params)
+    elif algorithm_name == "grasp":
+        return GRaSPAlgorithm(algorithm_params)
+    elif algorithm_name == "boss":
+        return BossAlgorithm(algorithm_params)
+    elif algorithm_name == "notears":
+        return NOTEARSAlgorithm(algorithm_params)
+    elif algorithm_name == "dag_gnn":
+        return DAGGNNAlgorithm(algorithm_params)
+    elif algorithm_name == "corl":
+        return CORLAlgorithm(algorithm_params)
+    elif algorithm_name == "grandag":
+        return GraNDAGAlgorithm(algorithm_params)
     else:
-        raise NotImplementedError(f"{algorithm} was not yet implemented")
+        raise NotImplementedError(f"{algorithm_name} was not yet implemented")
 
 
 def main():
     # Setup logging
-    setup_logging()
     load_dotenv(".env")
     args = parse_arguments()
 
-    # Setup MLflow logging
-    mlflow_logger = MLflowLogger(
-        experiment_name=args.dataset_config,
-        mlflow_tracking_uri=os.getenv("MLFLOW_TRACKING_URI"),
-    )
-
-    # Load data and ground truth adj matrix
-    data_params = load_yaml(ALL_DATA_CONFIGS)[args.dataset_config]
-    data = load_csv(data_params["train_fpath"])
-    true_adj = load_csv(data_params["true_adj_fpath"])
-    true_graph = dag_adj_to_graph(true_adj)
-
-    # Load selected model
-    algorithm_params = load_yaml(ALL_ALGORITHMS_CONFIGS)[args.algorithm_config]
-    model = get_discovery_algorithm(algorithm_params)
-
-    # Train model to discover causal structure and measure time
-    start_time = time.time()
-    model.train(data)
-    training_time = time.time() - start_time
-    est_graph = model.est_graph
-
-    # Evaluate and get metrics
-    metrics = Metrics(true_graph, est_graph, training_time)
-    metrics_results = metrics.get_result_metrics()
-
     # Setup output directory
-    output_dir = pathlib.Path(f"results/{args.dataset_config}/{args.algorithm_config}")
+    output_dir = pathlib.Path(f"results/{args.dataset_tag}/{args.algorithm_tag}")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Log experiment parameters and results to JSON
-    log_experiment_results(
-        output_dir=output_dir,
-        params=algorithm_params,
-        metrics=metrics_results,
-    )
+    # Setup logging
+    logging_fpath = str(output_dir / "output.log")
+    setup_logging(logging_fpath)
 
-    # Generate and save plots
-    plotter = Plotter()
-    plotter.plot_confusion_comparison(
-        metrics_data=metrics.get_result_metrics(),
-        title=f"Confusion Matrices - {args.algorithm_config} - {args.dataset_config}",
-        fpath=f"{output_dir}/{args.algorithm_config}_{args.dataset_config}_confusion_matrices.png",
-    )
-    plotter.plot_graph(
-        title=f"True Graph - {args.dataset_config}",
-        graph=true_graph,
-        fpath=f"{output_dir}/true_graph.png",
-    )
-    plotter.plot_graph(
-        title=f"Estimated Graph - {args.algorithm_config} - {args.dataset_config}",
-        graph=est_graph,
-        fpath=f"{output_dir}/{args.algorithm_config}_{args.dataset_config}_est_graph.png",
-    )
-    plotter.plot_graph_comparison(
-        graph1=true_graph,
-        graph2=est_graph,
-        fpath=f"{output_dir}/{args.algorithm_config}_{args.dataset_config}_graph_comparison.png",
-        title=f"Graph Comparison - {args.algorithm_config} - {args.dataset_config}",
-    )
+    # Capture warnings as log messages
+    logging.captureWarnings(True)
 
-    # Log to MLflow
-    mlflow_logger.log_run(
-        run_name=args.algorithm_config,
-        dataset_name=args.dataset_config,
-        params=algorithm_params,
-        metrics=metrics_results,
-        artifacts_dir=output_dir,
-    )
+    try:
+
+        # Setup MLflow logging
+        mlflow_logger = MLflowLogger(
+            experiment_name=args.dataset_tag,
+            mlflow_tracking_uri=os.getenv("MLFLOW_TRACKING_URI"),
+        )
+
+        # Load data and ground truth adj matrix
+        data_params = load_yaml(ALL_DATA_CONFIGS)[args.dataset_tag]
+        data = load_csv(data_params["train_fpath"])
+        true_adj = load_csv(data_params["true_adj_fpath"])
+        true_graph = dag_adj_to_graph(true_adj)
+
+        # Load selected model
+        algorithm_config = load_yaml(ALL_ALGORITHMS_CONFIGS)[args.algorithm_tag]
+        model = get_discovery_algorithm(
+            algorithm_config["algorithm_name"],
+            algorithm_config["algorithm_params"],
+        )
+
+        # Train model to discover causal structure and measure time
+        start_time = time.time()
+        model.train(data)
+        training_time = time.time() - start_time
+        est_graph = model.est_graph
+
+        # Evaluate and get metrics
+        metrics = Metrics(true_graph, est_graph, training_time)
+        metrics_results = metrics.get_result_metrics()
+
+        # Log experiment parameters and results to JSON
+        log_experiment_results(
+            output_dir=output_dir,
+            params=algorithm_config["algorithm_params"],
+            metrics=metrics_results,
+        )
+
+        # Generate and save plots
+        plotter = Plotter()
+        plotter.plot_confusion_comparison(
+            metrics_data=metrics.get_result_metrics(),
+            title=f"Confusion Matrices - {args.algorithm_tag} - {args.dataset_tag}",
+            fpath=f"{output_dir}/{args.algorithm_tag}_{args.dataset_tag}_confusion_matrices.png",
+        )
+        plotter.plot_graph(
+            title=f"True Graph - {args.dataset_tag}",
+            graph=true_graph,
+            fpath=f"{output_dir}/true_graph.png",
+        )
+        plotter.plot_graph(
+            title=f"Estimated Graph - {args.algorithm_tag} - {args.dataset_tag}",
+            graph=est_graph,
+            fpath=f"{output_dir}/{args.algorithm_tag}_{args.dataset_tag}_est_graph.png",
+        )
+        plotter.plot_graph_comparison(
+            graph1=true_graph,
+            graph2=est_graph,
+            fpath=f"{output_dir}/{args.algorithm_tag}_{args.dataset_tag}_graph_comparison.png",
+            title=f"Graph Comparison - {args.algorithm_tag} - {args.dataset_tag}",
+        )
+
+        # Log to MLflow
+        mlflow_logger.log_run(
+            run_name=args.algorithm_tag,
+            dataset_name=args.dataset_tag,
+            params=algorithm_config["algorithm_params"],
+            metrics=metrics_results,
+            artifacts_dir=output_dir,
+        )
+    except Exception:
+        logging.exception("Unhandled exception.")  # Logs full traceback
 
 
 if __name__ == "__main__":
