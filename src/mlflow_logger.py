@@ -72,6 +72,11 @@ class MLflowLogger:
     def _log_plot_images(self, artifacts_dir: pathlib.Path) -> None:
         """Log PNG plot images from the specified directory."""
         if artifacts_dir.exists():
+            try:
+                output_log_fpath = f"{str(artifacts_dir)}/output.log"
+                mlflow.log_artifact(output_log_fpath)
+            except:
+                logging.error(f"Failed to log {output_log_fpath}")
             for png_file in artifacts_dir.glob("*.png"):
                 try:
                     mlflow.log_artifact(str(png_file))
