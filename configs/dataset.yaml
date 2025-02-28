@@ -1,3 +1,7 @@
+ruta_synth_uniform:
+    train_fpath: ./data/ruta/synth_uniform/train.csv
+    true_adj_fpath: ./data/ruta/synth_uniform/adj_matrix.csv
+
 ruta_synth_normal:
     train_fpath: ./data/ruta/synth_normal/train.csv
     true_adj_fpath: ./data/ruta/synth_normal/adj_matrix.csv
