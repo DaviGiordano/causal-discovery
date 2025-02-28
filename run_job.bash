@@ -1,0 +1,11 @@
+#! /bin/bash
+#SBATCH --job-name=causal_discovery_2
+#SBATCH --output=causal_discovery.log
+#SBATCH --mem=32G
+#SBATCH --cpus-per-task=128
+#SBATCH --gpus=1
+#SBATCH --mail-user=davi.valerio
+#SBATCH --mail-type=ALL
+#SBATCH --partition=gpu32
+#SBATCH --nodelist=hpc04
+bash scripts/run_experiments.bash
