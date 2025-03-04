@@ -14,19 +14,13 @@ pc_kcigaussian_005:
     algorithm_name: pc
     algorithm_params:
         alpha: 0.05
-        indep_test: kci
-        kernelX: Gaussian
-        kernelY: Gaussian
-        kernelZ: Gaussian
+        indep_test: fastkci
 
 pc_kcigaussian_01:
     algorithm_name: pc
     algorithm_params:
         alpha: 0.1
-        indep_test: kci
-        kernelX: Gaussian
-        kernelY: Gaussian
-        kernelZ: Gaussian
+        indep_test: fastkci
 
 fci_fisherz_005:
     algorithm_name: fci
@@ -45,18 +39,12 @@ fci_kcigaussian_005:
     algorithm_params:
         alpha: 0.05
         indep_test: kci
-        kernelX: Gaussian
-        kernelY: Gaussian
-        kernelZ: Gaussian
 
 fci_kcigaussian_01:
     algorithm_name: fci
     algorithm_params:
         alpha: 0.1
         indep_test: kci
-        kernelX: Gaussian
-        kernelY: Gaussian
-        kernelZ: Gaussian
 
 ges_bic:
     algorithm_name: ges
