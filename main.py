@@ -15,12 +15,12 @@ from src.causal_discovery.causallearn_algorithms import (
     BossAlgorithm,
 )
 
-from src.causal_discovery.castle_algorithms import (
-    NOTEARSAlgorithm,
-    DAGGNNAlgorithm,
-    CORLAlgorithm,
-    GraNDAGAlgorithm,
-)
+# from src.causal_discovery.castle_algorithms import (
+#     NOTEARSAlgorithm,
+#     DAGGNNAlgorithm,
+#     CORLAlgorithm,
+#     GraNDAGAlgorithm,
+# )
 from src.load_parse import load_csv, load_yaml, parse_arguments
 from src.graph_aux import dag_adj_to_graph
 from src.visualization import Plotter
@@ -49,14 +49,14 @@ def get_discovery_algorithm(algorithm_name: str, algorithm_params: dict):
         return GRaSPAlgorithm(algorithm_params)
     elif algorithm_name == "boss":
         return BossAlgorithm(algorithm_params)
-    elif algorithm_name == "notears":
-        return NOTEARSAlgorithm(algorithm_params)
-    elif algorithm_name == "dag_gnn":
-        return DAGGNNAlgorithm(algorithm_params)
-    elif algorithm_name == "corl":
-        return CORLAlgorithm(algorithm_params)
-    elif algorithm_name == "grandag":
-        return GraNDAGAlgorithm(algorithm_params)
+    # elif algorithm_name == "notears":
+    #     return NOTEARSAlgorithm(algorithm_params)
+    # elif algorithm_name == "dag_gnn":
+    #     return DAGGNNAlgorithm(algorithm_params)
+    # elif algorithm_name == "corl":
+    #     return CORLAlgorithm(algorithm_params)
+    # elif algorithm_name == "grandag":
+    #     return GraNDAGAlgorithm(algorithm_params)
     else:
         raise NotImplementedError(f"{algorithm_name} was not yet implemented")
 
