@@ -2,6 +2,7 @@ import os
 import pathlib
 import time
 import logging
+from tqdm import tqdm
 from dotenv import load_dotenv
 from src.metrics import Metrics
 from src.causal_discovery.causallearn_algorithms import (
@@ -61,13 +62,13 @@ def get_discovery_algorithm(algorithm_name: str, algorithm_params: dict):
         raise NotImplementedError(f"{algorithm_name} was not yet implemented")
 
 
-def main():
+def run_experiment(algorithm_tag: str, dataset_tag: str):
     # Setup logging
     load_dotenv(".env")
-    args = parse_arguments()
+    # args = parse_arguments()
 
     # Setup output directory
-    output_dir = pathlib.Path(f"results/{args.dataset_tag}/{args.algorithm_tag}")
+    output_dir = pathlib.Path(f"results/{dataset_tag}/{algorithm_tag}")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Setup logging
@@ -78,21 +79,20 @@ def main():
     logging.captureWarnings(True)
 
     try:
-
         # Setup MLflow logging
         mlflow_logger = MLflowLogger(
-            experiment_name=args.dataset_tag,
+            experiment_name=dataset_tag,
             mlflow_tracking_uri=os.getenv("MLFLOW_TRACKING_URI"),
         )
 
         # Load data and ground truth adj matrix
-        data_params = load_yaml(ALL_DATA_CONFIGS)[args.dataset_tag]
+        data_params = load_yaml(ALL_DATA_CONFIGS)[dataset_tag]
         data = load_csv(data_params["train_fpath"])
         true_adj = load_csv(data_params["true_adj_fpath"])
         true_graph = dag_adj_to_graph(true_adj)
 
         # Load selected model
-        algorithm_config = load_yaml(ALL_ALGORITHMS_CONFIGS)[args.algorithm_tag]
+        algorithm_config = load_yaml(ALL_ALGORITHMS_CONFIGS)[algorithm_tag]
         model = get_discovery_algorithm(
             algorithm_config["algorithm_name"],
             algorithm_config["algorithm_params"],
@@ -108,42 +108,44 @@ def main():
         metrics = Metrics(true_graph, est_graph, training_time)
         metrics_results = metrics.get_result_metrics()
 
-        # Log experiment parameters and results to JSON
-        log_experiment_results(
-            output_dir=output_dir,
-            params=algorithm_config["algorithm_params"],
-            metrics=metrics_results,
-        )
-
         # Generate and save plots
         plotter = Plotter()
         plotter.plot_confusion_comparison(
             metrics_data=metrics.get_result_metrics(),
-            title=f"Confusion Matrices - {args.algorithm_tag} - {args.dataset_tag}",
-            fpath=f"{output_dir}/{args.algorithm_tag}_{args.dataset_tag}_confusion_matrices.png",
+            title=f"Confusion Matrices - {algorithm_tag} - {dataset_tag}",
+            fpath=f"{output_dir}/{algorithm_tag}_{dataset_tag}_confusion_matrices.png",
         )
         plotter.plot_graph(
-            title=f"True Graph - {args.dataset_tag}",
+            title=f"True Graph - {dataset_tag}",
             graph=true_graph,
             fpath=f"{output_dir}/true_graph.png",
         )
         plotter.plot_graph(
-            title=f"Estimated Graph - {args.algorithm_tag} - {args.dataset_tag}",
+            title=f"Estimated Graph - {algorithm_tag} - {dataset_tag}",
             graph=est_graph,
-            fpath=f"{output_dir}/{args.algorithm_tag}_{args.dataset_tag}_est_graph.png",
+            fpath=f"{output_dir}/est_graph.png",
         )
         plotter.plot_graph_comparison(
             graph1=true_graph,
             graph2=est_graph,
-            fpath=f"{output_dir}/{args.algorithm_tag}_{args.dataset_tag}_graph_comparison.png",
-            title=f"Graph Comparison - {args.algorithm_tag} - {args.dataset_tag}",
+            fpath=f"{output_dir}/{algorithm_tag}_{dataset_tag}_graph_comparison.png",
+            title=f"Graph Comparison - {algorithm_tag} - {dataset_tag}",
         )
 
+        params_to_log = algorithm_config["algorithm_params"]
+        params_to_log["dataset"] = dataset_tag
+        params_to_log["dataset_lenght"] = len(data)
+
+        # Log experiment parameters and results to JSON
+        log_experiment_results(
+            output_dir=output_dir,
+            params=params_to_log,
+            metrics=metrics_results,
+        )
         # Log to MLflow
         mlflow_logger.log_run(
-            run_name=args.algorithm_tag,
-            dataset_name=args.dataset_tag,
-            params=algorithm_config["algorithm_params"],
+            run_name=algorithm_tag,
+            params=params_to_log,
             metrics=metrics_results,
             artifacts_dir=output_dir,
         )
@@ -153,4 +155,56 @@ def main():
 
 if __name__ == "__main__":
 
-    main()
+    dataset_tags = (
+        # "csuite_cat_collider",
+        # "csuite_cat_to_cts",
+        # "csuite_cts_to_cat",
+        # "csuite_large_backdoor",
+        # "csuite_large_backdoor_binary_t",
+        # "csuite_linexp",
+        # "csuite_lingauss",
+        # "csuite_mixed_confounding",
+        # "csuite_mixed_simpson",
+        # "csuite_nonlingauss",
+        # "csuite_nonlin_simpson",
+        # "csuite_symprod_simpson",
+        # "csuite_weak_arrows",
+        # "csuite_weak_arrows_binary_t",
+        "ruta_synth_uniform",
+        "ruta_synth_normal",
+    )
+    algorithm_tags = (
+        "pc_fisherz_005",
+        "pc_fisherz_01",
+        # "pc_kcigaussian_005",
+        # "pc_kcigaussian_01",
+        "fci_fisherz_005",
+        "fci_fisherz_01",
+        "fci_kcigaussian_005",
+        "fci_kcigaussian_01",
+        "ges_bic",
+        # "ges_bdeu",
+        # "ges_margigeneral",
+        # "ges_margimulti",
+        "grasp_bic",
+        # "grasp_bdeu",
+        # "grasp_margigeneral",
+        # "grasp_margimulti",
+        "directlingam_pwling",
+        # "directlingam_kernel",
+    )
+    # castle_algorithms = (
+    #     "grandag_default",
+    #     "dag_gnn_default",
+    #     "corl_default",
+    #     "notears_default",
+    # )
+
+    for dataset_tag in tqdm(dataset_tags):
+        for algorithm_tag in algorithm_tags:
+            run_experiment(
+                algorithm_tag=algorithm_tag,
+                dataset_tag=dataset_tag,
+            )
+            logging.info(f"Completed algorithm: {algorithm_tag}")
+        logging.info(f"Completed all algorithm runs for dataset: {dataset_tag}")

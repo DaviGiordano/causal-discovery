@@ -30,7 +30,6 @@ class MLflowLogger:
     def log_run(
         self,
         run_name: str,
-        dataset_name: str,
         params: Dict,
         metrics: Dict,
         artifacts_dir: str,
@@ -38,8 +37,6 @@ class MLflowLogger:
         """Log a single experiment run to MLflow."""
         try:
             with mlflow.start_run(run_name=run_name):
-
-                mlflow.log_param(key="dataset", value=dataset_name)
 
                 self._log_params(params=params)
                 self._log_metrics(metrics)

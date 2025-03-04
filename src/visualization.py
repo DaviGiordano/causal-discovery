@@ -116,6 +116,7 @@ class Plotter:
 
         if fpath:
             fig.savefig(fpath)
+            plt.close(fig)
 
         return fig
 
@@ -155,6 +156,7 @@ class Plotter:
 
         if fpath:
             fig.savefig(fpath)
+            plt.close(fig)
 
         return fig
 
@@ -192,5 +194,6 @@ class Plotter:
 
         if fpath:
             fig.savefig(fpath)
+            plt.close(fig)
 
         return fig
