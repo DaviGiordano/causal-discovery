@@ -1,6 +1,7 @@
 from causallearn.graph.GeneralGraph import GeneralGraph
 from causallearn.graph.ArrowConfusion import ArrowConfusion
 from causallearn.graph.AdjacencyConfusion import AdjacencyConfusion
+from causallearn.graph.SHD import SHD
 from typing import Dict
 
 
@@ -21,6 +22,7 @@ class Metrics:
             "adjacency": self._compute_adjacency_metrics(),
             "arrow": self._compute_arrow_metrics(),
             "arrow_ce": self._compute_arrow_ce_metrics(),
+            "shd": self._compute_shd(),
             "training_time": self.training_time,
         }
 
@@ -106,6 +108,10 @@ class Metrics:
             "recall": recall,
             "f1": self._calculate_f1(precision, recall),
         }
+
+    def _compute_shd(self) -> float:
+        """Compute SHD distance between two graphs"""
+        return SHD(self.true_graph, self.est_graph).get_shd()
 
     def get_result_metrics(self) -> Dict:
         """Return all metrics."""
