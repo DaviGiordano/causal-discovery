@@ -4,6 +4,7 @@ import time
 import logging
 from tqdm import tqdm
 from dotenv import load_dotenv
+from algorithm_choice import get_discovery_algorithm
 from src.metrics import Metrics
 from src.causal_discovery.causallearn_algorithms import (
     PCAlgorithm,
@@ -31,35 +32,6 @@ from src.mlflow_logger import MLflowLogger
 
 ALL_ALGORITHMS_CONFIGS = "./configs/algorithms.yaml"
 ALL_DATA_CONFIGS = "./configs/dataset.yaml"
-
-
-def get_discovery_algorithm(algorithm_name: str, algorithm_params: dict):
-    if algorithm_name == "pc":
-        return PCAlgorithm(algorithm_params)
-    elif algorithm_name == "fci":
-        return FCIAlgorithm(algorithm_params)
-    elif algorithm_name == "ges":
-        return GESAlgorithm(algorithm_params)
-    elif algorithm_name == "es":
-        return ExactSearchAlgorithm(algorithm_params)
-    elif algorithm_name == "icalingam":
-        return ICALiNGAMAlgorithm(algorithm_params)
-    elif algorithm_name == "directlingam":
-        return DirectLiNGAMAlgorithm(algorithm_params)
-    elif algorithm_name == "grasp":
-        return GRaSPAlgorithm(algorithm_params)
-    elif algorithm_name == "boss":
-        return BossAlgorithm(algorithm_params)
-    # elif algorithm_name == "notears":
-    #     return NOTEARSAlgorithm(algorithm_params)
-    # elif algorithm_name == "dag_gnn":
-    #     return DAGGNNAlgorithm(algorithm_params)
-    # elif algorithm_name == "corl":
-    #     return CORLAlgorithm(algorithm_params)
-    # elif algorithm_name == "grandag":
-    #     return GraNDAGAlgorithm(algorithm_params)
-    else:
-        raise NotImplementedError(f"{algorithm_name} was not yet implemented")
 
 
 def run_experiment(
