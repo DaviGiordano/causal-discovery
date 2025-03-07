@@ -1,6 +1,3 @@
-from typing import Sequence
-from causallearn.graph.Node import Node
-from causallearn.graph.GraphNode import GraphNode
 from causallearn.graph.GeneralGraph import GeneralGraph
 from causallearn.graph.GraphNode import GraphNode
 from causallearn.graph.Endpoint import Endpoint
