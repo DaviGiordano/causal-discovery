@@ -1,10 +1,26 @@
-ruta_synth_uniform:
-    train_fpath: ./data/ruta/synth_uniform/train.csv
-    true_adj_fpath: ./data/ruta/synth_uniform/adj_matrix.csv
+ruta_synth_uniform_100:
+    train_fpath: ./data/ruta/synth_uniform_100/train.csv
+    true_adj_fpath: ./data/ruta/synth_uniform_100/adj_matrix.csv
 
-ruta_synth_normal:
-    train_fpath: ./data/ruta/synth_normal/train.csv
-    true_adj_fpath: ./data/ruta/synth_normal/adj_matrix.csv
+ruta_synth_normal_100:
+    train_fpath: ./data/ruta/synth_normal_100/train.csv
+    true_adj_fpath: ./data/ruta/synth_normal_100/adj_matrix.csv
+
+ruta_synth_uniform_1000:
+    train_fpath: ./data/ruta/synth_uniform_1000/train.csv
+    true_adj_fpath: ./data/ruta/synth_uniform_1000/adj_matrix.csv
+
+ruta_synth_normal_1000:
+    train_fpath: ./data/ruta/synth_normal_1000/train.csv
+    true_adj_fpath: ./data/ruta/synth_normal_1000/adj_matrix.csv
+
+ruta_synth_uniform_10000:
+    train_fpath: ./data/ruta/synth_uniform_10000/train.csv
+    true_adj_fpath: ./data/ruta/synth_uniform_10000/adj_matrix.csv
+
+ruta_synth_normal_10000:
+    train_fpath: ./data/ruta/synth_normal_10000/train.csv
+    true_adj_fpath: ./data/ruta/synth_normal_10000/adj_matrix.csv
 
 csuite_cat_chain:
     train_fpath: ./data/csuite/cat_chain/train.csv

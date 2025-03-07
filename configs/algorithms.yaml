@@ -14,13 +14,13 @@ pc_kcigaussian_005:
     algorithm_name: pc
     algorithm_params:
         alpha: 0.05
-        indep_test: fastkci
+        indep_test: kci
 
 pc_kcigaussian_01:
     algorithm_name: pc
     algorithm_params:
         alpha: 0.1
-        indep_test: fastkci
+        indep_test: kci
 
 fci_fisherz_005:
     algorithm_name: fci
@@ -51,50 +51,35 @@ ges_bic:
     algorithm_params:
         score_func: local_score_BIC
 
-ges_bdeu:
-    algorithm_name: ges
-    algorithm_params:
-        score_func: local_score_BDeu
+# ges_margigeneral:
+#     algorithm_name: ges
+#     algorithm_params:
+#         score_func: local_score_marginal_general
 
-ges_margigeneral:
-    algorithm_name: ges
-    algorithm_params:
-        score_func: local_score_marginal_general
-
-ges_margimulti:
-    algorithm_name: ges
-    algorithm_params:
-        score_func: local_score_marginal_multi
+# ges_margimulti:
+#     algorithm_name: ges
+#     algorithm_params:
+#         score_func: local_score_marginal_multi
 
 grasp_bic:
     algorithm_name: grasp
     algorithm_params:
         score_func: local_score_BIC
 
-grasp_bdeu:
-    algorithm_name: grasp
-    algorithm_params:
-        score_func: local_score_BDeu
+# grasp_margigeneral:
+#     algorithm_name: grasp
+#     algorithm_params:
+#         score_func: local_score_marginal_general
 
-grasp_margigeneral:
-    algorithm_name: grasp
-    algorithm_params:
-        score_func: local_score_marginal_general
-
-grasp_margimulti:
-    algorithm_name: grasp
-    algorithm_params:
-        score_func: local_score_marginal_multi
+# grasp_margimulti:
+#     algorithm_name: grasp
+#     algorithm_params:
+#         score_func: local_score_marginal_multi
         
 boss_bic:
     algorithm_name: boss
     algorithm_params:
         score_func: local_score_BIC
-
-boss_bdeu:
-    algorithm_name: boss
-    algorithm_params:
-        score_func: local_score_BDeu
 
 boss_margigeneral:
     algorithm_name: boss
