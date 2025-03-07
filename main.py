@@ -62,17 +62,26 @@ def get_discovery_algorithm(algorithm_name: str, algorithm_params: dict):
         raise NotImplementedError(f"{algorithm_name} was not yet implemented")
 
 
-def run_experiment(algorithm_tag: str, dataset_tag: str):
+def run_experiment(
+    algorithm_tag: str,
+    dataset_tag: str,
+    experiment_name: str = None,
+    output_dir: str = "./",
+):
     # Setup logging
     load_dotenv(".env")
     # args = parse_arguments()
 
+    # Set experiment name
+    if experiment_name == None:
+        experiment_name = dataset_tag
+
     # Setup output directory
-    output_dir = pathlib.Path(f"results/{dataset_tag}/{algorithm_tag}")
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = pathlib.Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
 
     # Setup logging
-    logging_fpath = str(output_dir / "output.log")
+    logging_fpath = str(output_path / "output.log")
     setup_logging(logging_fpath)
 
     # Capture warnings as log messages
@@ -81,7 +90,7 @@ def run_experiment(algorithm_tag: str, dataset_tag: str):
     try:
         # Setup MLflow logging
         mlflow_logger = MLflowLogger(
-            experiment_name=dataset_tag,
+            experiment_name=experiment_name,
             mlflow_tracking_uri=os.getenv("MLFLOW_TRACKING_URI"),
         )
 
@@ -113,22 +122,22 @@ def run_experiment(algorithm_tag: str, dataset_tag: str):
         plotter.plot_confusion_comparison(
             metrics_data=metrics.get_result_metrics(),
             title=f"Confusion Matrices - {algorithm_tag} - {dataset_tag}",
-            fpath=f"{output_dir}/{algorithm_tag}_{dataset_tag}_confusion_matrices.png",
+            fpath=f"{output_path}/confusion_matrices.png",
         )
         plotter.plot_graph(
             title=f"True Graph - {dataset_tag}",
             graph=true_graph,
-            fpath=f"{output_dir}/true_graph.png",
+            fpath=f"{output_path}/true_graph.png",
         )
         plotter.plot_graph(
             title=f"Estimated Graph - {algorithm_tag} - {dataset_tag}",
             graph=est_graph,
-            fpath=f"{output_dir}/est_graph.png",
+            fpath=f"{output_path}/est_graph.png",
         )
         plotter.plot_graph_comparison(
             graph1=true_graph,
             graph2=est_graph,
-            fpath=f"{output_dir}/{algorithm_tag}_{dataset_tag}_graph_comparison.png",
+            fpath=f"{output_path}/graph_comparison.png",
             title=f"Graph Comparison - {algorithm_tag} - {dataset_tag}",
         )
 
@@ -138,7 +147,7 @@ def run_experiment(algorithm_tag: str, dataset_tag: str):
 
         # Log experiment parameters and results to JSON
         log_experiment_results(
-            output_dir=output_dir,
+            output_path=output_path,
             params=params_to_log,
             metrics=metrics_results,
         )
@@ -147,7 +156,7 @@ def run_experiment(algorithm_tag: str, dataset_tag: str):
             run_name=algorithm_tag,
             params=params_to_log,
             metrics=metrics_results,
-            artifacts_dir=output_dir,
+            artifacts_dir=output_path,
         )
     except Exception:
         logging.exception("Unhandled exception.")  # Logs full traceback
@@ -170,8 +179,12 @@ if __name__ == "__main__":
         # "csuite_symprod_simpson",
         # "csuite_weak_arrows",
         # "csuite_weak_arrows_binary_t",
-        "ruta_synth_uniform",
-        "ruta_synth_normal",
+        "ruta_synth_uniform_100",
+        "ruta_synth_normal_100",
+        "ruta_synth_uniform_1000",
+        "ruta_synth_normal_1000",
+        "ruta_synth_uniform_10000",
+        "ruta_synth_normal_10000",
     )
     algorithm_tags = (
         "pc_fisherz_005",
@@ -182,15 +195,15 @@ if __name__ == "__main__":
         "fci_fisherz_01",
         "fci_kcigaussian_005",
         "fci_kcigaussian_01",
-        "ges_bic",
+        # "ges_bic",
         # "ges_bdeu",
         # "ges_margigeneral",
         # "ges_margimulti",
-        "grasp_bic",
+        # "grasp_bic",
         # "grasp_bdeu",
         # "grasp_margigeneral",
         # "grasp_margimulti",
-        "directlingam_pwling",
+        # "directlingam_pwling",
         # "directlingam_kernel",
     )
     # castle_algorithms = (
@@ -199,12 +212,14 @@ if __name__ == "__main__":
     #     "corl_default",
     #     "notears_default",
     # )
-
+    experiment_name = "verify_shd_2"
     for dataset_tag in tqdm(dataset_tags):
         for algorithm_tag in algorithm_tags:
             run_experiment(
                 algorithm_tag=algorithm_tag,
                 dataset_tag=dataset_tag,
+                experiment_name=experiment_name,
+                output_dir=f"./results/{experiment_name}/{dataset_tag}/{algorithm_tag} ",
             )
             logging.info(f"Completed algorithm: {algorithm_tag}")
         logging.info(f"Completed all algorithm runs for dataset: {dataset_tag}")
