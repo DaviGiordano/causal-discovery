@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 def log_experiment_results(
-    output_dir: pathlib.Path,
+    output_path: pathlib.Path,
     params: Dict[str, Any],
     metrics: Dict[str, Any],
 ) -> None:
@@ -16,12 +16,12 @@ def log_experiment_results(
     Log experiment parameters and results as JSON files in the output directory.
 
     Args:
-        output_dir: Directory where to save the log files
+        output_path: Directory where to save the log files
         algorithm_params: Dictionary containing algorithm parameters
         data_params: Dictionary containing data parameters
         metrics_results: Dictionary containing metrics results
     """
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path.mkdir(parents=True, exist_ok=True)
 
     # Create log files
     log_files = {
@@ -31,7 +31,7 @@ def log_experiment_results(
 
     # Save each log file
     for filename, data in log_files.items():
-        file_path = output_dir / filename
+        file_path = output_path / filename
         try:
             with open(file_path, "w") as f:
                 json.dump(data, f, indent=2)
