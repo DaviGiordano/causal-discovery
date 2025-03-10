@@ -32,7 +32,7 @@ class MLflowLogger:
         run_name: str,
         params: Dict,
         metrics: Dict,
-        artifacts_dir: str,
+        artifacts_dir: str = None,
     ) -> None:
         """Log a single experiment run to MLflow."""
         try:
@@ -40,7 +40,8 @@ class MLflowLogger:
 
                 self._log_params(params=params)
                 self._log_metrics(metrics)
-                self._log_plot_images(artifacts_dir)
+                if artifacts_dir:
+                    self._log_plot_images(artifacts_dir)
 
                 logger.info(f"Successfully logged run '{run_name}' to MLflow")
 
@@ -60,10 +61,7 @@ class MLflowLogger:
         """Flatten a nested metrics dict and log each metric."""
         for key, value in flatten(metrics_results, reducer="dot").items():
             if not isinstance(value, (str, int, float)):
-                logger.warning(
-                    f"Skipped logging metric '{key}' as it is not a string or a real number."
-                )
-                continue
+                continue  # Must be str, int or float
             mlflow.log_metric(key, value)
 
     def _log_plot_images(self, artifacts_dir: pathlib.Path) -> None:
