@@ -5,6 +5,7 @@ import logging
 from tqdm import tqdm
 from dotenv import load_dotenv
 from src.algorithm_choice import get_discovery_algorithm
+from causallearn.graph.GeneralGraph import GeneralGraph
 from src.metrics import Metrics
 from src.causal_discovery.causallearn_algorithms import (
     PCAlgorithm,
@@ -34,19 +35,46 @@ ALL_ALGORITHMS_CONFIGS = "./configs/algorithms.yaml"
 ALL_DATA_CONFIGS = "./configs/dataset.yaml"
 
 
+def plot_results(
+    true_graph: GeneralGraph,
+    est_graph: GeneralGraph,
+    metrics: Metrics,
+    output_path: pathlib.Path,
+):
+
+    # Generate and save plots
+    plotter = Plotter()
+    plotter.plot_confusion_comparison(
+        metrics_data=metrics.get_result_metrics(),
+        title=f"Confusion Matrices - {algorithm_tag} - {dataset_tag}",
+        fpath=f"{output_path}/confusion_matrices.png",
+    )
+    plotter.plot_graph(
+        title=f"True Graph - {dataset_tag}",
+        graph=true_graph,
+        fpath=f"{output_path}/true_graph.png",
+    )
+    plotter.plot_graph(
+        title=f"Estimated Graph - {algorithm_tag} - {dataset_tag}",
+        graph=est_graph,
+        fpath=f"{output_path}/est_graph.png",
+    )
+    plotter.plot_graph_comparison(
+        graph1=true_graph,
+        graph2=est_graph,
+        fpath=f"{output_path}/graph_comparison.png",
+        title=f"Graph Comparison - {algorithm_tag} - {dataset_tag}",
+    )
+
+
 def run_experiment(
     algorithm_tag: str,
     dataset_tag: str,
-    experiment_name: str = None,
+    experiment_name: str,
     output_dir: str = "./",
 ):
     # Setup logging
     load_dotenv(".env")
-    # args = parse_arguments()
-
-    # Set experiment name
-    if experiment_name == None:
-        experiment_name = dataset_tag
 
     # Setup output directory
     output_path = pathlib.Path(output_dir)
@@ -89,30 +117,6 @@ def run_experiment(
         metrics = Metrics(true_graph, est_graph, training_time)
         metrics_results = metrics.get_result_metrics()
 
-        # Generate and save plots
-        plotter = Plotter()
-        plotter.plot_confusion_comparison(
-            metrics_data=metrics.get_result_metrics(),
-            title=f"Confusion Matrices - {algorithm_tag} - {dataset_tag}",
-            fpath=f"{output_path}/confusion_matrices.png",
-        )
-        plotter.plot_graph(
-            title=f"True Graph - {dataset_tag}",
-            graph=true_graph,
-            fpath=f"{output_path}/true_graph.png",
-        )
-        plotter.plot_graph(
-            title=f"Estimated Graph - {algorithm_tag} - {dataset_tag}",
-            graph=est_graph,
-            fpath=f"{output_path}/est_graph.png",
-        )
-        plotter.plot_graph_comparison(
-            graph1=true_graph,
-            graph2=est_graph,
-            fpath=f"{output_path}/graph_comparison.png",
-            title=f"Graph Comparison - {algorithm_tag} - {dataset_tag}",
-        )
-
         params_to_log = algorithm_config["algorithm_params"]
         params_to_log["dataset"] = dataset_tag
         params_to_log["dataset_lenght"] = len(data)
@@ -137,26 +141,26 @@ def run_experiment(
 if __name__ == "__main__":
 
     dataset_tags = (
-        # "csuite_cat_collider",
-        # "csuite_cat_to_cts",
-        # "csuite_cts_to_cat",
-        # "csuite_large_backdoor",
-        # "csuite_large_backdoor_binary_t",
-        # "csuite_linexp",
-        # "csuite_lingauss",
-        # "csuite_mixed_confounding",
-        # "csuite_mixed_simpson",
-        # "csuite_nonlingauss",
-        # "csuite_nonlin_simpson",
-        # "csuite_symprod_simpson",
-        # "csuite_weak_arrows",
-        # "csuite_weak_arrows_binary_t",
-        "ruta_synth_uniform_100",
-        "ruta_synth_normal_100",
-        "ruta_synth_uniform_1000",
-        "ruta_synth_normal_1000",
-        "ruta_synth_uniform_10000",
-        "ruta_synth_normal_10000",
+        "csuite_cat_collider",
+        "csuite_cat_to_cts",
+        "csuite_cts_to_cat",
+        "csuite_large_backdoor",
+        "csuite_large_backdoor_binary_t",
+        "csuite_linexp",
+        "csuite_lingauss",
+        "csuite_mixed_confounding",
+        "csuite_mixed_simpson",
+        "csuite_nonlingauss",
+        "csuite_nonlin_simpson",
+        "csuite_symprod_simpson",
+        "csuite_weak_arrows",
+        "csuite_weak_arrows_binary_t",
+        # "ruta_synth_uniform_100",
+        # "ruta_synth_normal_100",
+        # "ruta_synth_uniform_1000",
+        # "ruta_synth_normal_1000",
+        # "ruta_synth_uniform_10000",
+        # "ruta_synth_normal_10000",
     )
     algorithm_tags = (
         "pc_fisherz_005",
@@ -193,7 +197,7 @@ if __name__ == "__main__":
                 algorithm_tag=algorithm_tag,
                 dataset_tag=dataset_tag,
                 experiment_name=experiment_name,
-                output_dir=f"./results/{experiment_name}/{dataset_tag}/{algorithm_tag} ",
+                output_dir=f"./results/{experiment_name}/{dataset_tag}/{algorithm_tag}",
             )
             logging.info(f"Completed algorithm: {algorithm_tag}")
         logging.info(f"Completed all algorithm runs for dataset: {dataset_tag}")
