@@ -4,7 +4,7 @@ import time
 import logging
 from tqdm import tqdm
 from dotenv import load_dotenv
-from algorithm_choice import get_discovery_algorithm
+from src.algorithm_choice import get_discovery_algorithm
 from src.metrics import Metrics
 from src.causal_discovery.causallearn_algorithms import (
     PCAlgorithm,
@@ -161,30 +161,32 @@ if __name__ == "__main__":
     algorithm_tags = (
         "pc_fisherz_005",
         "pc_fisherz_01",
-        # "pc_kcigaussian_005",
-        # "pc_kcigaussian_01",
         "fci_fisherz_005",
         "fci_fisherz_01",
         "fci_kcigaussian_005",
         "fci_kcigaussian_01",
-        # "ges_bic",
+        "ges_bic",
+        "grasp_bic",
+        "directlingam_pwling",
+        # "pc_kcigaussian_005",
+        # "pc_kcigaussian_01",
         # "ges_bdeu",
         # "ges_margigeneral",
         # "ges_margimulti",
-        # "grasp_bic",
         # "grasp_bdeu",
         # "grasp_margigeneral",
         # "grasp_margimulti",
-        # "directlingam_pwling",
         # "directlingam_kernel",
     )
+
     # castle_algorithms = (
     #     "grandag_default",
     #     "dag_gnn_default",
     #     "corl_default",
     #     "notears_default",
     # )
-    experiment_name = "verify_shd_2"
+
+    experiment_name = "shd_global_comparison"
     for dataset_tag in tqdm(dataset_tags):
         for algorithm_tag in algorithm_tags:
             run_experiment(
