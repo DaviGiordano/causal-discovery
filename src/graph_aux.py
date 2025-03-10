@@ -8,7 +8,7 @@ import numpy as np
 
 def dag_adj_to_graph(
     dag_adj: np.ndarray,
-    adj_type: str = "lower_triangular",
+    adj_type: str = "upper_triangular",
 ) -> GeneralGraph:
     nodes = list[Node]([GraphNode(f"X{i}") for i in range(1, dag_adj.shape[0] + 1)])
     graph = GeneralGraph(nodes)

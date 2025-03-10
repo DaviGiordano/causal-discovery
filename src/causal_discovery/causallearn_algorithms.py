@@ -96,7 +96,7 @@ class DirectLiNGAMAlgorithm(CausalDiscoveryAlgorithm):
         )
         model.fit(data)
         self.est_adj = model.adjacency_matrix_
-        self.est_graph = dag_adj_to_graph(self.est_adj)
+        self.est_graph = dag_adj_to_graph(self.est_adj, "lower_triangular")
 
 
 class GRaSPAlgorithm(CausalDiscoveryAlgorithm):
