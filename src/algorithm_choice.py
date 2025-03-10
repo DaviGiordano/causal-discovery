@@ -1,3 +1,4 @@
+from src.causal_discovery.CausalDiscoveryAlgorithm import CausalDiscoveryAlgorithm
 from src.causal_discovery.causallearn_algorithms import (
     PCAlgorithm,
     FCIAlgorithm,
@@ -17,7 +18,10 @@ from src.causal_discovery.castle_algorithms import (
 )
 
 
-def get_discovery_algorithm(algorithm_name: str, algorithm_params: dict):
+def get_discovery_algorithm(
+    algorithm_name: str,
+    algorithm_params: dict,
+) -> CausalDiscoveryAlgorithm:
     if algorithm_name == "pc":
         return PCAlgorithm(algorithm_params)
     elif algorithm_name == "fci":
