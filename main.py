@@ -148,6 +148,7 @@ def run_experiment(
 if __name__ == "__main__":
 
     dataset_tags = (
+        "csuite_cat_chain",
         "csuite_cat_collider",
         "csuite_cat_to_cts",
         "csuite_cts_to_cat",
