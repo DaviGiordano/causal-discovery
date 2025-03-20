@@ -17,6 +17,7 @@ class CausalDiscoveryAlgorithm(ABC):
         self.est_adj = None
         self.est_graph: GeneralGraph | None
         self.metrics: Metrics | None = None
+        self.is_trained = False
 
     @abstractmethod
     def train(self, data: np.ndarray) -> None:
