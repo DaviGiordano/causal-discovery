@@ -74,7 +74,7 @@ def run_experiment(
     output_dir: str = "./",
 ):
     # Setup logging
-    load_dotenv(".env")
+    load_dotenv(override=True)
 
     # Setup output directory
     output_path = pathlib.Path(output_dir)
@@ -98,7 +98,7 @@ def run_experiment(
         data_params = load_yaml(ALL_DATA_CONFIGS)[dataset_tag]
         data = load_csv(data_params["train_fpath"])
         true_adj = load_csv(data_params["true_adj_fpath"])
-        true_graph = dag_adj_to_graph(true_adj)
+        true_graph = dag_adj_to_graph(true_adj, "upper_triangular")
 
         # Load selected model
         algorithm_config = load_yaml(ALL_ALGORITHMS_CONFIGS)[algorithm_tag]
@@ -120,6 +120,13 @@ def run_experiment(
         params_to_log = algorithm_config["algorithm_params"]
         params_to_log["dataset"] = dataset_tag
         params_to_log["dataset_lenght"] = len(data)
+
+        plot_results(
+            true_graph,
+            est_graph,
+            metrics,
+            output_path,
+        )
 
         # Log experiment parameters and results to JSON
         log_experiment_results(
@@ -172,6 +179,7 @@ if __name__ == "__main__":
         "ges_bic",
         "grasp_bic",
         "directlingam_pwling",
+        # ---
         # "pc_kcigaussian_005",
         # "pc_kcigaussian_01",
         # "ges_bdeu",
@@ -190,7 +198,7 @@ if __name__ == "__main__":
     #     "notears_default",
     # )
 
-    experiment_name = "shd_global_comparison"
+    experiment_name = "global_comparison"
     for dataset_tag in tqdm(dataset_tags):
         for algorithm_tag in algorithm_tags:
             run_experiment(
