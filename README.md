@@ -67,3 +67,6 @@ Expect metrics and plots to be logged at `/results`. If you configured dagsflow,
 ```
 mlflow ui
 ```
+
+### Notes:
+- After an error with the generalized score, copilot suggested the following change. In causallearn/utils/ScoreUtils.py, in cov_seard function, I replaced `* x.T` by `@ x.T`
