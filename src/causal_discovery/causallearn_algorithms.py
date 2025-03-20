@@ -7,8 +7,6 @@ from causallearn.search.PermutationBased.GRaSP import grasp
 from causallearn.search.PermutationBased.BOSS import boss
 
 from src.causal_discovery.CausalDiscoveryAlgorithm import CausalDiscoveryAlgorithm
-from src.graph_aux import dag_adj_to_graph
-from src.logging_config import setup_logging
 import logging
 
 # setup_logging()
@@ -26,8 +24,7 @@ class PCAlgorithm(CausalDiscoveryAlgorithm):
             **self.config_params,
         )
         self.est_graph = cg.G
-        self.est_adj = None
-        self.is_trained = True
+        self._set_auxiliary_results()
 
 
 class FCIAlgorithm(CausalDiscoveryAlgorithm):
@@ -41,8 +38,7 @@ class FCIAlgorithm(CausalDiscoveryAlgorithm):
             **self.config_params,
         )
         self.est_graph = G
-        self.est_adj = None
-        self.is_trained = True
+        self._set_auxiliary_results()
 
 
 class GESAlgorithm(CausalDiscoveryAlgorithm):
@@ -56,8 +52,7 @@ class GESAlgorithm(CausalDiscoveryAlgorithm):
             **self.config_params,
         )
         self.est_graph = result["G"]
-        self.est_adj = None
-        self.is_trained = True
+        self._set_auxiliary_results()
 
 
 class ExactSearchAlgorithm(CausalDiscoveryAlgorithm):
@@ -71,8 +66,8 @@ class ExactSearchAlgorithm(CausalDiscoveryAlgorithm):
             **self.config_params,
         )
         self.est_adj = dag_adj
-        self.est_graph = dag_adj_to_graph(dag_adj)
-        self.is_trained = True
+        self.est_graph = self._dag_adj_to_graph(self.est_adj)
+        self._set_auxiliary_results()
 
 
 class ICALiNGAMAlgorithm(CausalDiscoveryAlgorithm):
@@ -86,8 +81,8 @@ class ICALiNGAMAlgorithm(CausalDiscoveryAlgorithm):
         )
         model.fit(data)
         self.est_adj = model.adjacency_matrix_
-        self.est_graph = dag_adj_to_graph(self.est_adj)
-        self.is_trained = True
+        self.est_graph = self._dag_adj_to_graph(self.est_adj)
+        self._set_auxiliary_results()
 
 
 class DirectLiNGAMAlgorithm(CausalDiscoveryAlgorithm):
@@ -101,8 +96,8 @@ class DirectLiNGAMAlgorithm(CausalDiscoveryAlgorithm):
         )
         model.fit(data)
         self.est_adj = model.adjacency_matrix_
-        self.est_graph = dag_adj_to_graph(self.est_adj, "lower_triangular")
-        self.is_trained = True
+        self.est_graph = self._dag_adj_to_graph(self.est_adj, "lower_triangular")
+        self._set_auxiliary_results()
 
 
 class GRaSPAlgorithm(CausalDiscoveryAlgorithm):
@@ -116,8 +111,7 @@ class GRaSPAlgorithm(CausalDiscoveryAlgorithm):
             **self.config_params,
         )
         self.est_graph = G
-        self.est_adj = None
-        self.is_trained = True
+        self._set_auxiliary_results()
 
 
 class BossAlgorithm(CausalDiscoveryAlgorithm):
@@ -131,5 +125,4 @@ class BossAlgorithm(CausalDiscoveryAlgorithm):
             **self.config_params,
         )
         self.est_graph = G
-        self.est_adj = None
-        self.is_trained = True
+        self._set_auxiliary_results()
