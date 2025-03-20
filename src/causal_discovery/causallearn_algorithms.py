@@ -6,6 +6,7 @@ from causallearn.search.FCMBased import lingam
 from causallearn.search.PermutationBased.GRaSP import grasp
 from causallearn.search.PermutationBased.BOSS import boss
 
+from src.graph_aux import dag_adj_to_graph
 from src.causal_discovery.CausalDiscoveryAlgorithm import CausalDiscoveryAlgorithm
 import logging
 
@@ -66,7 +67,7 @@ class ExactSearchAlgorithm(CausalDiscoveryAlgorithm):
             **self.config_params,
         )
         self.est_adj = dag_adj
-        self.est_graph = self._dag_adj_to_graph(self.est_adj)
+        self.est_graph = dag_adj_to_graph(self.est_adj)
         self._set_auxiliary_results()
 
 
@@ -81,7 +82,7 @@ class ICALiNGAMAlgorithm(CausalDiscoveryAlgorithm):
         )
         model.fit(data)
         self.est_adj = model.adjacency_matrix_
-        self.est_graph = self._dag_adj_to_graph(self.est_adj)
+        self.est_graph = dag_adj_to_graph(self.est_adj)
         self._set_auxiliary_results()
 
 
@@ -96,7 +97,7 @@ class DirectLiNGAMAlgorithm(CausalDiscoveryAlgorithm):
         )
         model.fit(data)
         self.est_adj = model.adjacency_matrix_
-        self.est_graph = self._dag_adj_to_graph(self.est_adj, "lower_triangular")
+        self.est_graph = dag_adj_to_graph(self.est_adj, "lower_triangular")
         self._set_auxiliary_results()
 
 

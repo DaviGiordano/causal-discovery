@@ -1,4 +1,5 @@
 from castle.algorithms import Notears, DAG_GNN, CORL, GraNDAG
+from src.graph_aux import dag_adj_to_graph
 from src.causal_discovery.CausalDiscoveryAlgorithm import CausalDiscoveryAlgorithm
 from src.logging_config import setup_logging
 import logging
@@ -16,7 +17,7 @@ class NOTEARSAlgorithm(CausalDiscoveryAlgorithm):
         model = Notears()
         model.learn(data)
         self.est_adj = model.causal_matrix
-        self.est_graph = self._dag_adj_to_graph(model.causal_matrix)
+        self.est_graph = dag_adj_to_graph(model.causal_matrix)
         self._set_auxiliary_results()
 
 
@@ -29,7 +30,7 @@ class DAGGNNAlgorithm(CausalDiscoveryAlgorithm):
         model = DAG_GNN(**self.config_params)
         model.learn(data)
         self.est_adj = model.causal_matrix
-        self.est_graph = self._dag_adj_to_graph(model.causal_matrix)
+        self.est_graph = dag_adj_to_graph(model.causal_matrix)
         self._set_auxiliary_results()
 
 
@@ -42,7 +43,7 @@ class CORLAlgorithm(CausalDiscoveryAlgorithm):
         model = CORL(**self.config_params)
         model.learn(data)
         self.est_adj = model.causal_matrix
-        self.est_graph = self._dag_adj_to_graph(model.causal_matrix)
+        self.est_graph = dag_adj_to_graph(model.causal_matrix)
         self._set_auxiliary_results()
 
 
@@ -55,5 +56,5 @@ class GraNDAGAlgorithm(CausalDiscoveryAlgorithm):
         model = GraNDAG(input_dim=data.shape[1], **self.config_params)
         model.learn(data)
         self.est_adj = model.causal_matrix
-        self.est_graph = self._dag_adj_to_graph(model.causal_matrix)
+        self.est_graph = dag_adj_to_graph(model.causal_matrix)
         self._set_auxiliary_results()
