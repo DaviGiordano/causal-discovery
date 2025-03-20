@@ -30,8 +30,6 @@ class CausalDiscoveryAlgorithm(ABC):
         pass
 
     def _set_auxiliary_results(self):
-        if not self.is_trained:
-            raise RuntimeError("Train before getting auxiliary results")
         if self.est_graph == GeneralGraph([]):
             raise RuntimeError("Estimated graph is empty.")
 
