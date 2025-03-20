@@ -29,7 +29,7 @@ class CausalDiscoveryEnsemble:
             algo.train(data)
         self.is_ensemble_trained = True
         self.avg_edge_adj = self._get_avg_edge_adj()
-        self.est_skeleton_union = self._get_est_skeleton_union()
+        self.est_skeleton_union, self.edge_frequency = self._get_est_skeleton_union()
 
     def _get_avg_edge_adj(self):
         if not self.algorithms:
@@ -82,14 +82,14 @@ class CausalDiscoveryEnsemble:
                             union_graph.add_edge(edge)
 
         # Create edge labels showing frequency
-        self.edge_frequency = {}
+        edge_frequency = {}
         for (i, j), count in edge_counts.items():
             frequency = count / len(self.algorithms)
-            self.edge_frequency[(i, j)] = f"{frequency:.2f}"
+            edge_frequency[(i, j)] = f"{frequency:.2f}"
 
         # Save and return the union graph
         self.est_graph_union = union_graph
-        return union_graph
+        return union_graph, edge_frequency
 
     def _create_filtered_graph(self, threshold: float = 0.5) -> GeneralGraph:
         """
