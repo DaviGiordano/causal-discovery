@@ -91,7 +91,7 @@ class CausalDiscoveryEnsemble:
         self.est_graph_union = union_graph
         return union_graph
 
-    def _get_filtered_skeleton_labels(self, threshold: float = 0.5) -> GeneralGraph:
+    def _create_filtered_graph(self, threshold: float = 0.5) -> GeneralGraph:
         """
         Create a filtered skeleton graph containing only edges with frequency above threshold.
 
@@ -150,7 +150,7 @@ class CausalDiscoveryEnsemble:
             title = f"Ensemble Skeleton (threshold = {threshold})"
 
         # Get filtered skeleton graph
-        filtered_graph, edge_labels = self._get_filtered_skeleton_labels(threshold)
+        filtered_graph, edge_labels = self._create_filtered_graph(threshold)
 
         # Create edge labels dictionary for edges that are in the filtered graph
 
