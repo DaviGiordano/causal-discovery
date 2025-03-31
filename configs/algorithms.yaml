@@ -1,3 +1,16 @@
+pc_tetrad_005:
+    algorithm_name: pc_tetrad
+    algorithm_params:
+        alpha: 0.05
+        indep_test: fisherz
+    bootstrap_params:
+        numberResampling: 10
+        percent_resample_size: 100
+        with_replacement: True
+        add_original: True # Adds original graph as additional bootstrap. Extra run
+        resampling_ensemble: 3 # Code for majority voting
+        seed: 42
+
 pc_fisherz_005:
     algorithm_name: pc
     algorithm_params:
@@ -10,17 +23,17 @@ pc_fisherz_01:
         alpha: 0.1
         indep_test: fisherz
 
-pc_kcigaussian_005:
-    algorithm_name: pc
-    algorithm_params:
-        alpha: 0.05
-        indep_test: kci
+# pc_kcigaussian_005:
+#     algorithm_name: pc
+#     algorithm_params:
+#         alpha: 0.05
+#         indep_test: kci
 
-pc_kcigaussian_01:
-    algorithm_name: pc
-    algorithm_params:
-        alpha: 0.1
-        indep_test: kci
+# pc_kcigaussian_01:
+#     algorithm_name: pc
+#     algorithm_params:
+#         alpha: 0.1
+#         indep_test: kci
 
 fci_fisherz_005:
     algorithm_name: fci
