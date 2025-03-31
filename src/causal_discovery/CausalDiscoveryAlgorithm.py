@@ -36,31 +36,3 @@ class CausalDiscoveryAlgorithm(ABC):
         self.est_edge_adj = get_edge_adjacency_matrix(graph=self.est_graph)
         self.est_graph_skeleton = get_graph_skeleton(graph=self.est_graph)
         self.is_trained = True
-
-    # def evaluate_graph(self) -> Dict:
-    #     """Evaluate the estimated graph against the true graph.
-
-    #     Returns:
-    #         Dict: Dictionary containing adjacency, arrow, and arrow_ce metrics
-    #     """
-    #     if self.true_graph is None or self.est_graph is None:
-    #         logger.error("Cannot evaluate: true_graph or est_graph is None")
-    #         return {}
-
-    #     try:
-    #         self.metrics = Metrics(self.true_graph, self.est_graph)
-    #         result_metrics = self.metrics.get_result_metrics()
-
-    #         # Log the results
-    #         logger.info("Graph evaluation results:")
-    #         for metric_type, values in result_metrics.items():
-    #             logger.info(f"{metric_type}:")
-    #             logger.info(f"  Precision: {values['precision']}")
-    #             logger.info(f"  Recall: {values['recall']}")
-    #             logger.info(f"  F1: {values['f1']}")
-
-    #         return result_metrics
-
-    #     except Exception as e:
-    #         logger.error(f"Error during graph evaluation: {str(e)}")
-    #         return {}
