@@ -102,10 +102,7 @@ def run_experiment(
 
         # Load selected model
         algorithm_config = load_yaml(ALL_ALGORITHMS_CONFIGS)[algorithm_tag]
-        model = get_discovery_algorithm(
-            algorithm_config["algorithm_name"],
-            algorithm_config["algorithm_params"],
-        )
+        model = get_discovery_algorithm(**algorithm_config)
 
         # Train model to discover causal structure and measure time
         start_time = time.time()
