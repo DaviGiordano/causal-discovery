@@ -24,6 +24,11 @@ class CausalDiscoveryAlgorithm(ABC):
         self.est_graph_skeleton: GeneralGraph = GeneralGraph([])
         self.is_trained = False
 
+        self.graph_string: str = ""
+        self.edge_probabilities: dict = {}
+        self.est_edges_dict: dict = {}
+        self.est_dotgraph: str = ""
+
     @abstractmethod
     def train(self, data: np.ndarray) -> None:
         """Learns causal structure from data"""

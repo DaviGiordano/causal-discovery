@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import pydot
 import seaborn as sns
 from io import BytesIO
 from PIL import Image
@@ -225,6 +226,45 @@ class Plotter:
         # Create figure
         fig = plt.figure(figsize=(8, 6))
         ax = plt.gca()
+
+        # Plot graph
+        ax.imshow(graph_img)
+        ax.axis("off")
+        ax.set_title(title)
+
+        if fpath:
+            fig.savefig(fpath)
+            plt.close(fig)
+
+        return fig
+
+    def plot_pydot(
+        self,
+        dotgraph: str,
+        title: str = "Graph",
+        ax: Optional[Axes] = None,
+        fpath: Optional[str] = None,
+    ) -> Figure:
+        """Plot a graph from dot string representation.
+
+        Args:
+            dotgraph: DOT string representation of the graph
+            title: Title for the plot
+            ax: Optional matplotlib axes to plot on
+            fpath: Optional path to save the figure
+
+        Returns:
+            Matplotlib figure object
+        """
+        # Convert dot string to image
+        graph = pydot.graph_from_dot_data(dotgraph)[0]
+        graph_img = Image.open(BytesIO(graph.create_png()))
+
+        if ax is None:
+            fig = plt.figure(figsize=(6, 5))
+            ax = plt.gca()
+        else:
+            fig = ax.figure
 
         # Plot graph
         ax.imshow(graph_img)

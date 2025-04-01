@@ -23,9 +23,16 @@ LOGGING_CONFIG = {
             "filename": "./temp.log",  # Temp default
             "mode": "w",
         },
+        "error_file": {
+            "class": "logging.FileHandler",
+            "level": "ERROR",
+            "formatter": "standard",
+            "filename": "./error.log",
+            "mode": "w",
+        },
     },
     "root": {
-        "handlers": ["console", "file"],
+        "handlers": ["console", "file", "error_file"],
         "level": "DEBUG",
     },
 }

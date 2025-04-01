@@ -85,7 +85,7 @@ def str_to_edge_probabilities(graph_str: str) -> GeneralGraph:
     return edge_probs
 
 
-def str_to_chosen_edges(graph_string: str) -> dict:
+def str_to_edge_dict(graph_string: str) -> dict:
     """
     Extracts and processes edge information from a graph string representation to determine edge types between nodes.
 
@@ -100,13 +100,13 @@ def str_to_chosen_edges(graph_string: str) -> dict:
 
     def _initialize_edge_types(nodes):
         # Initialize all possible edges probabilities
-        edge_probs = {}
+        edge_types = {}
         for i, source in enumerate(nodes):
             for target in nodes[
                 i + 1 :
             ]:  # Only consider unique pairs: (X1,X3) but not (X3,X1)
-                edge_probs[(source, target)] = "no_edge"
-        return edge_probs
+                edge_types[(source, target)] = "no_edge"
+        return edge_types
 
     nodes = _extract_nodes(graph_string)
     chosen_edges = _initialize_edge_types(nodes)

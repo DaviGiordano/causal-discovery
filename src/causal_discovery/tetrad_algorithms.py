@@ -1,3 +1,4 @@
+import jpype
 from src.graph_aux import dag_adj_to_graph
 from src.causal_discovery.CausalDiscoveryAlgorithm import CausalDiscoveryAlgorithm
 from src.pytetrad.TetradSearch import TetradSearch
@@ -6,7 +7,7 @@ import numpy as np
 import logging
 
 from src.parse_tetrad_string import (
-    str_to_chosen_edges,
+    str_to_edge_dict,
     str_to_edge_probabilities,
     str_to_general_graph,
 )
@@ -50,16 +51,23 @@ class PCTetrad(CausalDiscoveryAlgorithm):
             node_names = [f"X{i+1}" for i in range(data.shape[1])]
 
         df = pd.DataFrame(data, columns=node_names)
-        search = TetradSearch(df)
+        try:
 
-        self._set_indep_test(search)
-        if self.config_params.get("bootstrap_params"):
-            self._set_bootstrap(search)
+            search = TetradSearch(df)
+            search.set_verbose(False)
 
-        search.run_pc()
+            self._set_indep_test(search)
+            if self.config_params.get("bootstrap_params"):
+                self._set_bootstrap(search)
+
+            search.run_pc()
+        except jpype.JException as ex:
+            print("Java exception:", ex.message())
+            raise
 
         self.graph_string = str(search.get_string())
+        self.est_dotgraph = search.get_dot()
         self.est_graph = str_to_general_graph(self.graph_string)
         self.edge_probabilities = str_to_edge_probabilities(self.graph_string)
-        self.chosen_edges = str_to_chosen_edges(self.graph_string)
+        self.est_edges_dict = str_to_edge_dict(self.graph_string)
         self._set_auxiliary_results()
