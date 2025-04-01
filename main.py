@@ -4,6 +4,7 @@ import time
 import logging
 from tqdm import tqdm
 from dotenv import load_dotenv
+from src.parse_tetrad_string import str_to_edge_dict
 from src.algorithm_choice import get_discovery_algorithm
 from causallearn.graph.GeneralGraph import GeneralGraph
 from src.metrics import Metrics
@@ -17,6 +18,9 @@ from src.causal_discovery.causallearn_algorithms import (
     GRaSPAlgorithm,
     BossAlgorithm,
 )
+import matplotlib
+
+matplotlib.use("Agg")  # Non-interactive backend
 
 # from src.causal_discovery.castle_algorithms import (
 #     NOTEARSAlgorithm,
@@ -24,7 +28,7 @@ from src.causal_discovery.causallearn_algorithms import (
 #     CORLAlgorithm,
 #     GraNDAGAlgorithm,
 # )
-from src.load_parse import load_csv, load_yaml, parse_arguments
+from src.load_parse import load_csv, load_json, load_txt, load_yaml, parse_arguments
 from src.graph_aux import dag_adj_to_graph
 from src.visualization import Plotter
 from src.json_logger import log_experiment_results
@@ -38,6 +42,7 @@ ALL_DATA_CONFIGS = "./configs/dataset.yaml"
 def plot_results(
     true_graph: GeneralGraph,
     est_graph: GeneralGraph,
+    est_dotgraph: str,
     metrics: Metrics,
     output_path: pathlib.Path,
 ):
@@ -65,27 +70,21 @@ def plot_results(
         fpath=f"{output_path}/graph_comparison.png",
         title=f"Graph Comparison - {algorithm_tag} - {dataset_tag}",
     )
+    plotter.plot_pydot(
+        est_dotgraph,
+        title=f"Edge probabilities - {algorithm_tag} - {dataset_tag}",
+        fpath=f"{output_path}/edge_probabilities.png",
+    )
 
 
 def run_experiment(
     algorithm_tag: str,
     dataset_tag: str,
     experiment_name: str,
-    output_dir: str = "./",
+    output_path: pathlib.Path,
 ):
     # Setup logging
     load_dotenv(override=True)
-
-    # Setup output directory
-    output_path = pathlib.Path(output_dir)
-    output_path.mkdir(parents=True, exist_ok=True)
-
-    # Setup logging
-    logging_fpath = str(output_path / "output.log")
-    setup_logging(logging_fpath)
-
-    # Capture warnings as log messages
-    logging.captureWarnings(True)
 
     try:
         # Setup MLflow logging
@@ -99,6 +98,7 @@ def run_experiment(
         data = load_csv(data_params["train_fpath"])
         true_adj = load_csv(data_params["true_adj_fpath"])
         true_graph = dag_adj_to_graph(true_adj, "upper_triangular")
+        true_edges_dict = load_json(data_params["true_edges_dict"])
 
         # Load selected model
         algorithm_config = load_yaml(ALL_ALGORITHMS_CONFIGS)[algorithm_tag]
@@ -108,10 +108,16 @@ def run_experiment(
         start_time = time.time()
         model.train(data)
         training_time = time.time() - start_time
-        est_graph = model.est_graph
 
         # Evaluate and get metrics
-        metrics = Metrics(true_graph, est_graph, training_time)
+        metrics = Metrics(
+            training_time,
+            true_graph,
+            model.est_graph,
+            model.est_edges_dict,
+            true_edges_dict,
+            model.edge_probabilities,
+        )
         metrics_results = metrics.get_result_metrics()
 
         params_to_log = algorithm_config["algorithm_params"]
@@ -120,7 +126,8 @@ def run_experiment(
 
         plot_results(
             true_graph,
-            est_graph,
+            model.est_graph,
+            model.est_dotgraph,
             metrics,
             output_path,
         )
@@ -140,19 +147,20 @@ def run_experiment(
         )
     except Exception:
         logging.exception("Unhandled exception.")  # Logs full traceback
+        raise
 
 
 if __name__ == "__main__":
 
     dataset_tags = (
-        "csuite_cat_chain",
-        "csuite_cat_collider",
-        "csuite_cat_to_cts",
-        "csuite_cts_to_cat",
+        # "csuite_cat_chain",
+        # "csuite_cat_collider",
+        # "csuite_cat_to_cts",
+        # "csuite_cts_to_cat",
         "csuite_large_backdoor",
         "csuite_large_backdoor_binary_t",
-        "csuite_linexp",
-        "csuite_lingauss",
+        # "csuite_linexp",
+        # "csuite_lingauss",
         "csuite_mixed_confounding",
         "csuite_mixed_simpson",
         "csuite_nonlingauss",
@@ -160,23 +168,31 @@ if __name__ == "__main__":
         "csuite_symprod_simpson",
         "csuite_weak_arrows",
         "csuite_weak_arrows_binary_t",
-        # "ruta_synth_uniform_100",
-        # "ruta_synth_normal_100",
-        # "ruta_synth_uniform_1000",
-        # "ruta_synth_normal_1000",
-        # "ruta_synth_uniform_10000",
-        # "ruta_synth_normal_10000",
+        "ruta_synth_uniform_100",
+        "ruta_synth_normal_100",
+        "ruta_synth_uniform_1000",
+        "ruta_synth_normal_1000",
+        "ruta_synth_uniform_10000",
+        "ruta_synth_normal_10000",
     )
     algorithm_tags = (
-        "pc_fisherz_005",
-        "pc_fisherz_01",
-        "fci_fisherz_005",
-        "fci_fisherz_01",
-        "fci_kcigaussian_005",
-        "fci_kcigaussian_01",
-        "ges_bic",
-        "grasp_bic",
-        "directlingam_pwling",
+        "pc_tetrad_005_boots100",
+        "pc_tetrad_01_boots100",
+        "pc_tetrad_05_boots100",
+        "pc_tetrad_10_boots100",
+        "pc_tetrad_005_jack90",
+        "pc_tetrad_01_jack90",
+        "pc_tetrad_05_jack90",
+        "pc_tetrad_10_jack90",
+        # "pc_fisherz_005",
+        # "pc_fisherz_01",
+        # "fci_fisherz_005",
+        # "fci_fisherz_01",
+        # "fci_kcigaussian_005",
+        # "fci_kcigaussian_01",
+        # "ges_bic",
+        # "grasp_bic",
+        # "directlingam_pwling",
         # ---
         # "pc_kcigaussian_005",
         # "pc_kcigaussian_01",
@@ -196,14 +212,46 @@ if __name__ == "__main__":
     #     "notears_default",
     # )
 
-    experiment_name = "global_comparison"
+    experiment_name = "bootstrap_experiments"
+    MAX_RETRIES = 3
+
     for dataset_tag in tqdm(dataset_tags):
         for algorithm_tag in algorithm_tags:
-            run_experiment(
-                algorithm_tag=algorithm_tag,
-                dataset_tag=dataset_tag,
-                experiment_name=experiment_name,
-                output_dir=f"./results/{experiment_name}/{dataset_tag}/{algorithm_tag}",
+
+            # Setup output directory
+            output_path = pathlib.Path(
+                f"./results/{experiment_name}/{dataset_tag}/{algorithm_tag}"
             )
-            logging.info(f"Completed algorithm: {algorithm_tag}")
-        logging.info(f"Completed all algorithm runs for dataset: {dataset_tag}")
+            output_path.mkdir(parents=True, exist_ok=True)
+
+            # Setup logging
+            logging_fpath = str(output_path / "output.log")
+            setup_logging(logging_fpath)
+
+            # Capture warnings as log messages
+            logging.captureWarnings(True)
+
+            retries = 0
+            while retries < MAX_RETRIES:
+                try:
+                    logging.info(
+                        f"Running experiment (Attempt {retries+1}) for {algorithm_tag} on {dataset_tag}"
+                    )
+                    run_experiment(
+                        algorithm_tag=algorithm_tag,
+                        dataset_tag=dataset_tag,
+                        experiment_name=experiment_name,
+                        output_path=output_path,
+                    )
+                    logging.info(f"Completed algorithm: {algorithm_tag}")
+                    break  # Success, exit retry loop
+
+                except Exception as e:
+                    retries += 1
+                    logging.warning(
+                        f"Attempt {retries} failed for {algorithm_tag} on {dataset_tag}: {e}"
+                    )
+                    if retries >= MAX_RETRIES:
+                        logging.error(
+                            f"Experiment failed after {MAX_RETRIES} attempts for {algorithm_tag} on {dataset_tag}"
+                        )
