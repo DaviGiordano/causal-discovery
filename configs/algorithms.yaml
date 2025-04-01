@@ -1,63 +1,130 @@
-pc_tetrad_005:
+pc_tetrad_005_boots100:
     algorithm_name: pc_tetrad
     algorithm_params:
-        alpha: 0.05
-        indep_test: fisherz
+        alpha: 0.005
+        indep_test: conditional_gaussian
     bootstrap_params:
-        numberResampling: 10
+        numberResampling: 100
         percent_resample_size: 100
         with_replacement: True
         add_original: True # Adds original graph as additional bootstrap. Extra run
-        resampling_ensemble: 3 # Code for majority voting
+        resampling_ensemble: 1 # Code for "preserved" strategy
         seed: 42
 
-pc_fisherz_005:
-    algorithm_name: pc
+pc_tetrad_01_boots100:
+    algorithm_name: pc_tetrad
+    algorithm_params:
+        alpha: 0.01
+        indep_test: conditional_gaussian
+    bootstrap_params:
+        numberResampling: 100
+        percent_resample_size: 100
+        with_replacement: True
+        add_original: True # Adds original graph as additional bootstrap. Extra run
+        resampling_ensemble: 1 # Code for "preserved" strategy
+        seed: 42
+
+pc_tetrad_05_boots100:
+    algorithm_name: pc_tetrad
     algorithm_params:
         alpha: 0.05
-        indep_test: fisherz
+        indep_test: conditional_gaussian
+    bootstrap_params:
+        numberResampling: 100
+        percent_resample_size: 100
+        with_replacement: True
+        add_original: True # Adds original graph as additional bootstrap. Extra run
+        resampling_ensemble: 1 # Code for "preserved" strategy
+        seed: 42
 
-pc_fisherz_01:
-    algorithm_name: pc
+pc_tetrad_10_boots100:
+    algorithm_name: pc_tetrad
     algorithm_params:
-        alpha: 0.1
-        indep_test: fisherz
+        alpha: 0.10
+        indep_test: conditional_gaussian
+    bootstrap_params:
+        numberResampling: 100
+        percent_resample_size: 100
+        with_replacement: True
+        add_original: True # Adds original graph as additional bootstrap. Extra run
+        resampling_ensemble: 1 # Code for "preserved" strategy
+        seed: 42
 
-# pc_kcigaussian_005:
+pc_tetrad_005_jack90:
+    algorithm_name: pc_tetrad
+    algorithm_params:
+        alpha: 0.005
+        indep_test: conditional_gaussian
+    bootstrap_params:
+        numberResampling: 100
+        percent_resample_size: 90
+        with_replacement: False
+        add_original: True # Adds original graph as additional bootstrap. Extra run
+        resampling_ensemble: 1 # Code for "preserved" strategy
+        seed: 42
+
+pc_tetrad_01_jack90:
+    algorithm_name: pc_tetrad
+    algorithm_params:
+        alpha: 0.01
+        indep_test: conditional_gaussian
+    bootstrap_params:
+        numberResampling: 100
+        percent_resample_size: 90
+        with_replacement: False
+        add_original: True # Adds original graph as additional bootstrap. Extra run
+        resampling_ensemble: 1 # Code for "preserved" strategy
+        seed: 42
+
+pc_tetrad_05_jack90:
+    algorithm_name: pc_tetrad
+    algorithm_params:
+        alpha: 0.05
+        indep_test: conditional_gaussian
+    bootstrap_params:
+        numberResampling: 100
+        percent_resample_size: 90
+        with_replacement: False
+        add_original: True # Adds original graph as additional bootstrap. Extra run
+        resampling_ensemble: 1 # Code for "preserved" strategy
+        seed: 42
+
+pc_tetrad_10_jack90:
+    algorithm_name: pc_tetrad
+    algorithm_params:
+        alpha: 0.10
+        indep_test: conditional_gaussian
+    bootstrap_params:
+        numberResampling: 100
+        percent_resample_size: 90
+        with_replacement: False
+        add_original: True # Adds original graph as additional bootstrap. Extra run
+        resampling_ensemble: 1 # Code for "preserved" strategy
+        seed: 42
+
+# pc_fisherz_005:
 #     algorithm_name: pc
 #     algorithm_params:
 #         alpha: 0.05
-#         indep_test: kci
+#         indep_test: fisherz
 
-# pc_kcigaussian_01:
+# pc_fisherz_01:
 #     algorithm_name: pc
 #     algorithm_params:
 #         alpha: 0.1
-#         indep_test: kci
+#         indep_test: fisherz
 
-fci_fisherz_005:
-    algorithm_name: fci
-    algorithm_params:
-        alpha: 0.05
-        indep_test: fisherz
+# fci_fisherz_005:
+#     algorithm_name: fci
+#     algorithm_params:
+#         alpha: 0.05
+#         indep_test: fisherz
 
-fci_fisherz_01:
-    algorithm_name: fci
-    algorithm_params:
-        alpha: 0.1
-        indep_test: fisherz
-
-fci_kcigaussian_005:
-    algorithm_name: fci
-    algorithm_params:
-        alpha: 0.05
-        indep_test: kci
-
-fci_kcigaussian_01:
-    algorithm_name: fci
-    algorithm_params:
-        alpha: 0.1
-        indep_test: kci
+# fci_fisherz_01:
+#     algorithm_name: fci
+#     algorithm_params:
+#         alpha: 0.1
+#         indep_test: fisherz
 
 ges_bic:
     algorithm_name: ges
