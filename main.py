@@ -34,6 +34,7 @@ from src.visualization import Plotter
 from src.json_logger import log_experiment_results
 from src.logging_config import setup_logging
 from src.mlflow_logger import MLflowLogger
+from flatten_dict import flatten
 
 ALL_ALGORITHMS_CONFIGS = "./configs/algorithms.yaml"
 ALL_DATA_CONFIGS = "./configs/dataset.yaml"
@@ -101,8 +102,8 @@ def run_experiment(
         true_edges_dict = load_json(data_params["true_edges_dict"])
 
         # Load selected model
-        algorithm_config = load_yaml(ALL_ALGORITHMS_CONFIGS)[algorithm_tag]
-        model = get_discovery_algorithm(**algorithm_config)
+        config_params = load_yaml(ALL_ALGORITHMS_CONFIGS)[algorithm_tag]
+        model = get_discovery_algorithm(**config_params)
 
         # Train model to discover causal structure and measure time
         start_time = time.time()
@@ -120,7 +121,7 @@ def run_experiment(
         )
         metrics_results = metrics.get_result_metrics()
 
-        params_to_log = algorithm_config["algorithm_params"]
+        params_to_log = flatten(config_params, reducer="dot")
         params_to_log["dataset"] = dataset_tag
         params_to_log["dataset_lenght"] = len(data)
 
@@ -159,28 +160,26 @@ if __name__ == "__main__":
         "ruta_synth_normal_1000",
         "ruta_synth_uniform_10000",
         "ruta_synth_normal_10000",
-        # "csuite_cat_chain",
-        # "csuite_cat_collider",
-        # "csuite_cat_to_cts",
-        # "csuite_cts_to_cat",
-        # "csuite_linexp",
-        # "csuite_lingauss",
+        "csuite_cat_chain",
+        "csuite_cat_collider",
+        "csuite_cat_to_cts",
+        "csuite_cts_to_cat",
+        "csuite_linexp",
+        "csuite_lingauss",
         "csuite_nonlingauss",
         "csuite_nonlin_simpson",
-        "csuite_symprod_simpson",
+        # "csuite_symprod_simpson",
         "csuite_weak_arrows",
         "csuite_weak_arrows_binary_t",
-        # "csuite_large_backdoor",
-        # "csuite_large_backdoor_binary_t",
+        "csuite_large_backdoor",
+        "csuite_large_backdoor_binary_t",
         "csuite_mixed_simpson",
-        "csuite_mixed_confounding",
+        # "csuite_mixed_confounding",
     )
     algorithm_tags = (
-        "pc_tetrad_005_boots100",
         "pc_tetrad_01_boots100",
         "pc_tetrad_05_boots100",
         "pc_tetrad_10_boots100",
-        "pc_tetrad_005_jack90",
         "pc_tetrad_01_jack90",
         "pc_tetrad_05_jack90",
         "pc_tetrad_10_jack90",
@@ -212,8 +211,8 @@ if __name__ == "__main__":
     #     "notears_default",
     # )
 
-    experiment_name = "bootstrap_experiments"
-    MAX_RETRIES = 3
+    experiment_name = "bootstrap_experiments_4"
+    MAX_RETRIES = 2
 
     for dataset_tag in tqdm(dataset_tags):
         for algorithm_tag in algorithm_tags:
