@@ -20,34 +20,34 @@ from src.causal_discovery.castle_algorithms import (
 from src.causal_discovery.tetrad_algorithms import PCTetrad
 
 
-def get_discovery_algorithm(**algorithm_config) -> CausalDiscoveryAlgorithm:
-    algorithm_name = algorithm_config.pop("algorithm_name", "")
+def get_discovery_algorithm(**config_params) -> CausalDiscoveryAlgorithm:
+    algorithm_name = config_params.pop("algorithm_name", "")
 
     if algorithm_name == "pc":
-        return PCAlgorithm(algorithm_config)
+        return PCAlgorithm(config_params)
     elif algorithm_name == "fci":
-        return FCIAlgorithm(algorithm_config)
+        return FCIAlgorithm(config_params)
     elif algorithm_name == "ges":
-        return GESAlgorithm(algorithm_config)
+        return GESAlgorithm(config_params)
     elif algorithm_name == "es":
-        return ExactSearchAlgorithm(algorithm_config)
+        return ExactSearchAlgorithm(config_params)
     elif algorithm_name == "icalingam":
-        return ICALiNGAMAlgorithm(algorithm_config)
+        return ICALiNGAMAlgorithm(config_params)
     elif algorithm_name == "directlingam":
-        return DirectLiNGAMAlgorithm(algorithm_config)
+        return DirectLiNGAMAlgorithm(config_params)
     elif algorithm_name == "grasp":
-        return GRaSPAlgorithm(algorithm_config)
+        return GRaSPAlgorithm(config_params)
     elif algorithm_name == "boss":
-        return BossAlgorithm(algorithm_config)
+        return BossAlgorithm(config_params)
     elif algorithm_name == "notears":
-        return NOTEARSAlgorithm(algorithm_config)
+        return NOTEARSAlgorithm(config_params)
     elif algorithm_name == "dag_gnn":
-        return DAGGNNAlgorithm(algorithm_config)
+        return DAGGNNAlgorithm(config_params)
     elif algorithm_name == "corl":
-        return CORLAlgorithm(algorithm_config)
+        return CORLAlgorithm(config_params)
     elif algorithm_name == "grandag":
-        return GraNDAGAlgorithm(algorithm_config)
+        return GraNDAGAlgorithm(config_params)
     elif algorithm_name == "pc_tetrad":
-        return PCTetrad(algorithm_config)
+        return PCTetrad(config_params)
     else:
         raise NotImplementedError(f"{algorithm_name} was not yet implemented")
