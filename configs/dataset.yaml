@@ -1,83 +1,104 @@
 ruta_synth_uniform_100:
     train_fpath: ./data/ruta/synth_uniform_100/train.csv
     true_adj_fpath: ./data/ruta/synth_uniform_100/adj_matrix.csv
+    true_edges_dict: ./data/ruta/synth_uniform_100/true_edges_dict.json
 
 ruta_synth_normal_100:
     train_fpath: ./data/ruta/synth_normal_100/train.csv
     true_adj_fpath: ./data/ruta/synth_normal_100/adj_matrix.csv
+    true_edges_dict: ./data/ruta/synth_normal_100/true_edges_dict.json
 
 ruta_synth_uniform_1000:
     train_fpath: ./data/ruta/synth_uniform_1000/train.csv
     true_adj_fpath: ./data/ruta/synth_uniform_1000/adj_matrix.csv
+    true_edges_dict: ./data/ruta/synth_uniform_1000/true_edges_dict.json
 
 ruta_synth_normal_1000:
     train_fpath: ./data/ruta/synth_normal_1000/train.csv
     true_adj_fpath: ./data/ruta/synth_normal_1000/adj_matrix.csv
+    true_edges_dict: ./data/ruta/synth_normal_1000/true_edges_dict.json
 
 ruta_synth_uniform_10000:
     train_fpath: ./data/ruta/synth_uniform_10000/train.csv
     true_adj_fpath: ./data/ruta/synth_uniform_10000/adj_matrix.csv
+    true_edges_dict: ./data/ruta/synth_uniform_10000/true_edges_dict.json
 
 ruta_synth_normal_10000:
     train_fpath: ./data/ruta/synth_normal_10000/train.csv
     true_adj_fpath: ./data/ruta/synth_normal_10000/adj_matrix.csv
+    true_edges_dict: ./data/ruta/synth_normal_10000/true_edges_dict.json
 
 csuite_cat_chain:
     train_fpath: ./data/csuite/cat_chain/train.csv
     true_adj_fpath: ./data/csuite/cat_chain/adj_matrix.csv
+    true_edges_dict: ./data/csuite/cat_chain/true_edges_dict.json
 
 csuite_cat_to_cts:
     train_fpath: ./data/csuite/cat_to_cts/train.csv
     true_adj_fpath: ./data/csuite/cat_to_cts/adj_matrix.csv
+    true_edges_dict: ./data/csuite/cat_to_cts/true_edges_dict.json
 
 csuite_large_backdoor:
     train_fpath: ./data/csuite/large_backdoor/train.csv
     true_adj_fpath: ./data/csuite/large_backdoor/adj_matrix.csv
+    true_edges_dict: ./data/csuite/large_backdoor/true_edges_dict.json
 
 csuite_linexp:
     train_fpath: ./data/csuite/linexp/train.csv
     true_adj_fpath: ./data/csuite/linexp/adj_matrix.csv
+    true_edges_dict: ./data/csuite/linexp/true_edges_dict.json
 
 csuite_mixed_confounding:
     train_fpath: ./data/csuite/mixed_confounding/train.csv
     true_adj_fpath: ./data/csuite/mixed_confounding/adj_matrix.csv
+    true_edges_dict: ./data/csuite/mixed_confounding/true_edges_dict.json
 
 csuite_nonlingauss:
     train_fpath: ./data/csuite/nonlingauss/train.csv
     true_adj_fpath: ./data/csuite/nonlingauss/adj_matrix.csv
+    true_edges_dict: ./data/csuite/nonlingauss/true_edges_dict.json
 
 csuite_symprod_simpson:
     train_fpath: ./data/csuite/symprod_simpson/train.csv
     true_adj_fpath: ./data/csuite/symprod_simpson/adj_matrix.csv
+    true_edges_dict: ./data/csuite/symprod_simpson/true_edges_dict.json
 
 csuite_weak_arrows_binary_t:
     train_fpath: ./data/csuite/weak_arrows_binary_t/train.csv
     true_adj_fpath: ./data/csuite/weak_arrows_binary_t/adj_matrix.csv
+    true_edges_dict: ./data/csuite/weak_arrows_binary_t/true_edges_dict.json
 
 csuite_cat_collider:
     train_fpath: ./data/csuite/cat_collider/train.csv
     true_adj_fpath: ./data/csuite/cat_collider/adj_matrix.csv
+    true_edges_dict: ./data/csuite/cat_collider/true_edges_dict.json
 
 csuite_cts_to_cat:
     train_fpath: ./data/csuite/cts_to_cat/train.csv
     true_adj_fpath: ./data/csuite/cts_to_cat/adj_matrix.csv
+    true_edges_dict: ./data/csuite/cts_to_cat/true_edges_dict.json
 
 csuite_large_backdoor_binary_t:
     train_fpath: ./data/csuite/large_backdoor_binary_t/train.csv
     true_adj_fpath: ./data/csuite/large_backdoor_binary_t/adj_matrix.csv
+    true_edges_dict: ./data/csuite/large_backdoor_binary_t/true_edges_dict.json
 
 csuite_lingauss:
     train_fpath: ./data/csuite/lingauss/train.csv
     true_adj_fpath: ./data/csuite/lingauss/adj_matrix.csv
+    true_edges_dict: ./data/csuite/lingauss/true_edges_dict.json
 
 csuite_mixed_simpson:
     train_fpath: ./data/csuite/mixed_simpson/train.csv
     true_adj_fpath: ./data/csuite/mixed_simpson/adj_matrix.csv
+    true_edges_dict: ./data/csuite/mixed_simpson/true_edges_dict.json
 
 csuite_nonlin_simpson:
     train_fpath: ./data/csuite/nonlin_simpson/train.csv
     true_adj_fpath: ./data/csuite/nonlin_simpson/adj_matrix.csv
+    true_edges_dict: ./data/csuite/nonlin_simpson/true_edges_dict.json
 
 csuite_weak_arrows:
     train_fpath: ./data/csuite/weak_arrows/train.csv
     true_adj_fpath: ./data/csuite/weak_arrows/adj_matrix.csv
+    true_edges_dict: ./data/csuite/weak_arrows/true_edges_dict.json
