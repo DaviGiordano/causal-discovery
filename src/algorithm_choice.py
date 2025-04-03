@@ -17,7 +17,14 @@ from src.causal_discovery.castle_algorithms import (
     GraNDAGAlgorithm,
 )
 
-from src.causal_discovery.tetrad_algorithms import PCTetrad
+from src.causal_discovery.tetrad_algorithms import (
+    BOSSTetrad,
+    DAGMATetrad,
+    DirectLiNGAMTetrad,
+    FGESTetrad,
+    GRASPTetrad,
+    PCTetrad,
+)
 
 
 def get_discovery_algorithm(**config_params) -> CausalDiscoveryAlgorithm:
@@ -49,5 +56,15 @@ def get_discovery_algorithm(**config_params) -> CausalDiscoveryAlgorithm:
         return GraNDAGAlgorithm(config_params)
     elif algorithm_name == "pc_tetrad":
         return PCTetrad(config_params)
+    elif algorithm_name == "fges_tetrad":
+        return FGESTetrad(config_params)
+    elif algorithm_name == "boss_tetrad":
+        return BOSSTetrad(config_params)
+    elif algorithm_name == "grasp_tetrad":
+        return GRASPTetrad(config_params)
+    elif algorithm_name == "dagma_tetrad":
+        return DAGMATetrad(config_params)
+    elif algorithm_name == "directlingam_tetrad":
+        return DirectLiNGAMTetrad(config_params)
     else:
         raise NotImplementedError(f"{algorithm_name} was not yet implemented")
