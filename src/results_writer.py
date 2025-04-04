@@ -7,7 +7,7 @@ from flatten_dict import flatten
 logger = logging.getLogger(__name__)
 
 
-def log_experiment_results(
+def write_experiment_results(
     output_path: pathlib.Path,
     params: Dict[str, Any],
     metrics: Dict[str, Any],

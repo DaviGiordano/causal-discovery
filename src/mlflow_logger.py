@@ -72,12 +72,13 @@ class MLflowLogger:
                 mlflow.log_artifact(output_log_fpath)
             except:
                 logging.error(f"Failed to log {output_log_fpath}")
-            for png_file in artifacts_dir.glob("*.png"):
-                try:
-                    mlflow.log_artifact(str(png_file))
-                    logger.info(f"Logged plot: {png_file.name}")
-                except Exception as e:
-                    logger.error(f"Failed to log plot {png_file.name}: {str(e)}")
+            for ext in ["png", "txt", "json"]:
+                for file in pathlib.Path(artifacts_dir).glob(f"*.{ext}"):
+                    try:
+                        mlflow.log_artifact(str(file))
+                        logger.info(f"Logged file: {file.name}")
+                    except Exception as e:
+                        logger.error(f"Failed to log file {file.name}: {str(e)}")
 
     def _configure_mlfow(self, uri: str):
         """Configure MLflow tracking URI, falling back to local storage if needed."""

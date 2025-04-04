@@ -31,10 +31,11 @@ matplotlib.use("Agg")  # Non-interactive backend
 from src.load_parse import load_csv, load_json, load_txt, load_yaml, parse_arguments
 from src.graph_aux import dag_adj_to_graph
 from src.visualization import Plotter
-from src.json_logger import log_experiment_results
+from src.results_writer import write_experiment_results
 from src.logging_config import setup_logging
 from src.mlflow_logger import MLflowLogger
 from flatten_dict import flatten
+import json
 
 ALL_ALGORITHMS_CONFIGS = "./configs/algorithms.yaml"
 ALL_DATA_CONFIGS = "./configs/dataset.yaml"
@@ -133,8 +134,22 @@ def run_experiment(
             output_path,
         )
 
-        # Log experiment parameters and results to JSON
-        log_experiment_results(
+        # Save edge probabilities to JSON
+        edge_probs_str_keys = {str(k): v for k, v in model.edge_probabilities.items()}
+        with open(output_path / "edge_probabilities.json", "w") as f:
+            json.dump(edge_probs_str_keys, f, indent=4)
+
+        # Write graph strings
+        with open(output_path / "graph_strings.txt", "w") as f:
+            f.write("== True graph ==\n")
+            f.write(str(true_graph))
+            f.write("\n\n== Estimated graph ==\n")
+            f.write(str(model.est_graph))
+            f.write("\n\n== Confidence per edge ==\n")
+            f.write(model.graph_string)
+
+        # Write experiment parameters and results to JSON
+        write_experiment_results(
             output_path=output_path,
             params=params_to_log,
             metrics=metrics_results,
@@ -155,8 +170,8 @@ if __name__ == "__main__":
 
     dataset_tags = (
         # "ruta_synth_uniform_100",
-        "ruta_synth_normal_100",
-        # "ruta_synth_uniform_1000",
+        # "ruta_synth_normal_100",
+        "ruta_synth_uniform_1000",
         # "ruta_synth_normal_1000",
         # "ruta_synth_uniform_10000",
         # "ruta_synth_normal_10000",
@@ -248,7 +263,7 @@ if __name__ == "__main__":
     #     "notears_default",
     # )
 
-    experiment_name = "bootstrap_experiments_5"
+    experiment_name = "test_txt"
     MAX_RETRIES = 2
 
     for dataset_tag in tqdm(dataset_tags):
