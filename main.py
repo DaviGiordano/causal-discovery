@@ -124,7 +124,7 @@ def run_experiment(
 
         params_to_log = flatten(config_params, reducer="dot")
         params_to_log["dataset"] = dataset_tag
-        params_to_log["dataset_lenght"] = len(data)
+        params_to_log["dataset_length"] = len(data)
 
         plot_results(
             true_graph,
