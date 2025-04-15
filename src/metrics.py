@@ -5,6 +5,7 @@ from causallearn.graph.SHD import SHD
 from src.graph_aux import get_graph_skeleton
 from typing import Dict
 from statistics import mean
+from statistics import median
 
 
 class Metrics:
@@ -113,6 +114,17 @@ class Metrics:
         """Compute SHD distance between two graphs"""
         return SHD(self.true_graph, self.est_graph).get_shd()
 
+    def _compute_normalized_shd(self) -> float:
+        """Compute SHD distance between two graphs, normalized by number of possible edges"""
+        shd = SHD(self.true_graph, self.est_graph).get_shd()
+        num_nodes = len(self.true_graph.get_nodes())
+        num_possible_edges = num_nodes * (num_nodes - 1)
+
+        if num_possible_edges == 0:  # Handle edge case with 0 or 1 node
+            return 0.0
+
+        return round(shd / num_possible_edges, 4)
+
     def _compute_skeleton_shd(self) -> float:
         """Compute SHD distance between the skeleton of two graphs"""
         return SHD(
@@ -128,6 +140,24 @@ class Metrics:
         if not frequencies:
             return 0
         return mean(frequencies)
+
+    def _compute_median_frequency(self) -> float:
+        """Compute median frequency of the chosen edges, including absence of edge."""
+        frequencies = []
+        for edge_key, chosen_edge in self.est_edges_dict.items():
+            frequencies.append(self.edge_probabilities[edge_key][chosen_edge])
+        if not frequencies:
+            return 0
+        return median(frequencies)
+
+    def _compute_min_frequency(self) -> float:
+        """Compute minimum frequency of the chosen edges, including absence of edge."""
+        frequencies = []
+        for edge_key, chosen_edge in self.est_edges_dict.items():
+            frequencies.append(self.edge_probabilities[edge_key][chosen_edge])
+        if not frequencies:
+            return 0
+        return min(frequencies)
 
     def _compute_average_edge_frequency(self) -> float:
         """Compute average frequency of the chosen edges, excluding absence of edge"""
@@ -238,6 +268,17 @@ class Metrics:
             "training_time": self.training_time,
             "average_frequency": (
                 self._compute_average_frequency()
+                if (self.est_edges_dict and self.edge_probabilities)
+                else -1
+            ),
+            "normalized_shd": self._compute_normalized_shd(),
+            "median_frequency": (
+                self._compute_median_frequency()
+                if (self.est_edges_dict and self.edge_probabilities)
+                else -1
+            ),
+            "min_frequency": (
+                self._compute_min_frequency()
                 if (self.est_edges_dict and self.edge_probabilities)
                 else -1
             ),
