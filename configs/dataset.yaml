@@ -1,3 +1,13 @@
+ruta_synth_uniform_4000:
+    train_fpath: ./data/ruta/synth_uniform_4000/train.csv
+    true_adj_fpath: ./data/ruta/synth_uniform_4000/adj_matrix.csv
+    true_edges_dict: ./data/ruta/synth_uniform_4000/true_edges_dict.json
+
+ruta_synth_normal_4000:
+    train_fpath: ./data/ruta/synth_normal_4000/train.csv
+    true_adj_fpath: ./data/ruta/synth_normal_4000/adj_matrix.csv
+    true_edges_dict: ./data/ruta/synth_normal_4000/true_edges_dict.json
+
 ruta_synth_uniform_100:
     train_fpath: ./data/ruta/synth_uniform_100/train.csv
     true_adj_fpath: ./data/ruta/synth_uniform_100/adj_matrix.csv

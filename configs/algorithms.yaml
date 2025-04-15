@@ -1,163 +1,72 @@
 # PC algorithms
 
-pc_tetrad_01_boots100:
+pc_tetrad_01:
     algorithm_name: pc_tetrad
     test_name: conditional_gaussian_test
     test_params:
         alpha: 0.01
     bootstrap_strategy: bootstrap100
 
-pc_tetrad_05_boots100:
+pc_tetrad_05:
     algorithm_name: pc_tetrad
     test_name: conditional_gaussian_test
     test_params:
         alpha: 0.05
     bootstrap_strategy: bootstrap100
 
-pc_tetrad_10_boots100:
+pc_tetrad_10:
     algorithm_name: pc_tetrad
     test_name: conditional_gaussian_test
     test_params:
         alpha: 0.10
     bootstrap_strategy: bootstrap100
-
-pc_tetrad_01_jack90:
-    algorithm_name: pc_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    bootstrap_strategy: jackknife90
-
-pc_tetrad_05_jack90:
-    algorithm_name: pc_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.05
-    bootstrap_strategy: jackknife90
-
-pc_tetrad_10_jack90:
-    algorithm_name: pc_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    bootstrap_strategy: jackknife90
 
 # FGES algorithms (score-based)
-fges_tetrad_pd1_boots100:
+fges_tetrad_pd1:
     algorithm_name: fges_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 1
     bootstrap_strategy: bootstrap100
 
-fges_tetrad_pd2_boots100:
+fges_tetrad_pd2:
     algorithm_name: fges_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 2
     bootstrap_strategy: bootstrap100
 
-fges_tetrad_pd4_boots100:
+fges_tetrad_pd4:
     algorithm_name: fges_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 4
     bootstrap_strategy: bootstrap100
-
-fges_tetrad_pd6_boots100:
-    algorithm_name: fges_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: bootstrap100
-
-fges_tetrad_pd1_jack90:
-    algorithm_name: fges_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: jackknife90
-
-fges_tetrad_pd2_jack90:
-    algorithm_name: fges_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: jackknife90
-
-fges_tetrad_pd4_jack90:
-    algorithm_name: fges_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: jackknife90
-
-fges_tetrad_pd6_jack90:
-    algorithm_name: fges_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: jackknife90
 
 # BOSS algorithms (score-based)
-boss_tetrad_pd1_boots100:
+boss_tetrad_pd1:
     algorithm_name: boss_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 1
     bootstrap_strategy: bootstrap100
 
-boss_tetrad_pd2_boots100:
+boss_tetrad_pd2:
     algorithm_name: boss_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 2
     bootstrap_strategy: bootstrap100
 
-boss_tetrad_pd4_boots100:
+boss_tetrad_pd4:
     algorithm_name: boss_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 4
     bootstrap_strategy: bootstrap100
-
-boss_tetrad_pd6_boots100:
-    algorithm_name: boss_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: bootstrap100
-
-boss_tetrad_pd1_jack90:
-    algorithm_name: boss_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: jackknife90
-
-boss_tetrad_pd2_jack90:
-    algorithm_name: boss_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: jackknife90
-
-boss_tetrad_pd4_jack90:
-    algorithm_name: boss_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: jackknife90
-
-boss_tetrad_pd6_jack90:
-    algorithm_name: boss_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: jackknife90
 
 # GRASP configurations with alpha = 0.05
-grasp_tetrad_pd1_a005_boots100:
+grasp_tetrad_pd1:
     algorithm_name: grasp_tetrad
     test_name: conditional_gaussian_test
     test_params:
@@ -167,7 +76,7 @@ grasp_tetrad_pd1_a005_boots100:
         penalty_discount: 1
     bootstrap_strategy: bootstrap100
 
-grasp_tetrad_pd2_a005_boots100:
+grasp_tetrad_pd2:
     algorithm_name: grasp_tetrad
     test_name: conditional_gaussian_test
     test_params:
@@ -177,7 +86,7 @@ grasp_tetrad_pd2_a005_boots100:
         penalty_discount: 2
     bootstrap_strategy: bootstrap100
 
-grasp_tetrad_pd4_a005_boots100:
+grasp_tetrad_pd4:
     algorithm_name: grasp_tetrad
     test_name: conditional_gaussian_test
     test_params:
@@ -187,357 +96,46 @@ grasp_tetrad_pd4_a005_boots100:
         penalty_discount: 4
     bootstrap_strategy: bootstrap100
 
-grasp_tetrad_pd6_a005_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.05
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd1_a005_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.05
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd2_a005_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.05
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd4_a005_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.05
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd6_a005_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.05
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: jackknife90
-
-# GRASP configurations with alpha = 0.01
-grasp_tetrad_pd1_a001_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd2_a001_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd4_a001_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd6_a001_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd1_a001_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd2_a001_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd4_a001_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd6_a001_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.01
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: jackknife90
-
-# GRASP configurations with alpha = 0.10
-grasp_tetrad_pd1_a010_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd2_a010_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd4_a010_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd6_a010_boots100:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: bootstrap100
-
-grasp_tetrad_pd1_a010_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd2_a010_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd4_a010_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: jackknife90
-
-grasp_tetrad_pd6_a010_jack90:
-    algorithm_name: grasp_tetrad
-    test_name: conditional_gaussian_test
-    test_params:
-        alpha: 0.10
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: jackknife90
-    
 # Direct-LiNGAM algorithms with varying penalty discount
-directlingam_pd1_boots100:
+directlingam_pd1:
     algorithm_name: directlingam_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 1
     bootstrap_strategy: bootstrap100
 
-directlingam_pd2_boots100:
+directlingam_pd2:
     algorithm_name: directlingam_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 2
     bootstrap_strategy: bootstrap100
 
-directlingam_pd4_boots100:
+directlingam_pd4:
     algorithm_name: directlingam_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 4
     bootstrap_strategy: bootstrap100
 
-directlingam_pd6_boots100:
-    algorithm_name: directlingam_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: bootstrap100
-
-directlingam_pd1_jack90:
-    algorithm_name: directlingam_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: jackknife90
-
-directlingam_pd2_jack90:
-    algorithm_name: directlingam_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: jackknife90
-
-directlingam_pd4_jack90:
-    algorithm_name: directlingam_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: jackknife90
-
-directlingam_pd6_jack90:
-    algorithm_name: directlingam_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: jackknife90
-    
 # DAGMA algorithms (varying penalty_discount instead of lambda)
-dagma_tetrad_pd1_boots100:
+dagma_tetrad_pd1:
     algorithm_name: dagma_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 1
     bootstrap_strategy: bootstrap100
 
-dagma_tetrad_pd2_boots100:
+dagma_tetrad_pd2:
     algorithm_name: dagma_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 2
     bootstrap_strategy: bootstrap100
 
-dagma_tetrad_pd4_boots100:
+dagma_tetrad_pd4:
     algorithm_name: dagma_tetrad
     score_name: conditional_gaussian_score
     score_params:
         penalty_discount: 4
     bootstrap_strategy: bootstrap100
-
-dagma_tetrad_pd6_boots100:
-    algorithm_name: dagma_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: bootstrap100
-
-dagma_tetrad_pd1_jack90:
-    algorithm_name: dagma_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 1
-    bootstrap_strategy: jackknife90
-
-dagma_tetrad_pd2_jack90:
-    algorithm_name: dagma_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 2
-    bootstrap_strategy: jackknife90
-
-dagma_tetrad_pd4_jack90:
-    algorithm_name: dagma_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 4
-    bootstrap_strategy: jackknife90
-
-dagma_tetrad_pd6_jack90:
-    algorithm_name: dagma_tetrad
-    score_name: conditional_gaussian_score
-    score_params:
-        penalty_discount: 6
-    bootstrap_strategy: jackknife90
-
-# notears_default:
-#     algorithm_name: notears
-#     algorithm_params:
-#         lambda1: 0.01
-#         loss_type: l2
-#         max_iter: 100
-#         h_tol: 1e-8
-#         rho_max: 1e+16
-#         w_threshold: 0.3
-
-# dag_gnn_default:
-#     algorithm_name: dag_gnn
-#     algorithm_params:
-#         device_type: gpu
-
-# corl_default:
-#     algorithm_name: corl
-#     algorithm_params:
-#         device_type: gpu
-
-# notears_default:
-#     algorithm_name: notears
-#     algorithm_params:
-
-# grandag_default:
-#     algorithm_name: grandag
-#     algorithm_params:
-#         device_type: gpu
