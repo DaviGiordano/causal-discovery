@@ -14,7 +14,7 @@ Flat YAML example::
     bootstrap_strategy: bootstrap100
     num_threads: 4
 
-Any section may be omitted; hard‑coded defaults will be applied. The script logs
+Any section may be omitted; hard-coded defaults will be applied. The script logs
 all resolved parameters as well as the total runtime of the search. If a
 knowledge file is supplied it is loaded into Tetrad **before** the search and
 its contents are echoed in the log.
@@ -32,7 +32,7 @@ import pandas as pd
 import yaml
 
 # ---------------------------------------------------------------------------
-# Project‑local imports (package layout enforced by src/)
+# Project-local imports (package layout enforced by src/)
 # ---------------------------------------------------------------------------
 try:
     from src.logging_config import setup_logging
@@ -117,7 +117,7 @@ def _load_yaml(path: Path) -> Dict[str, Any]:
 
 
 class CausalDiscoveryPipeline:
-    """End‑to‑end orchestration: load data, configure Tetrad, run, and save."""
+    """End-to-end orchestration: load data, configure Tetrad, run, and save."""
 
     def __init__(
         self,
