@@ -27,6 +27,7 @@ import sys
 import time
 from pathlib import Path
 from typing import Any, Dict, Optional
+import json
 
 import pandas as pd
 import yaml
@@ -125,12 +126,14 @@ class CausalDiscoveryPipeline:
         data_path: Path,
         output_path: Path,
         knowledge_path: Optional[Path] = None,
+        metadata_path: Optional[Path] = None,
     ):
+        self.logger = logging.getLogger(self.__class__.__name__)
         self.cfg = _load_yaml(cfg_path)
+        self.metadata_path = metadata_path
         self.data = self._read_data(data_path)
         self.output_path = output_path
         self.knowledge_path = knowledge_path
-        self.logger = logging.getLogger(self.__class__.__name__)
         self.search: Optional[TetradSearch] = None
 
         # Number of worker threads (default 1)
@@ -156,14 +159,41 @@ class CausalDiscoveryPipeline:
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
-    @staticmethod
-    def _read_data(path: Path) -> pd.DataFrame:
+    def _read_data(self, path: Path) -> pd.DataFrame:
         try:
             df = pd.read_csv(path)
         except Exception as err:
             raise RuntimeError(f"Unable to read dataset '{path}': {err}") from err
         if df.empty:
             raise ValueError("Dataset contains no rows.")
+
+        # Process metadata if provided
+        if self.metadata_path and self.metadata_path.exists():
+            try:
+                with open(self.metadata_path, "r", encoding="utf-8") as f:
+                    metadata = json.loads(f.read())
+
+                # Extract continuous column names
+                continuous_cols = [
+                    domain["name"]
+                    for domain in metadata.get("domains", [])
+                    if not domain.get("discrete", True)
+                ]
+
+                # Convert continuous columns to float64
+                converted_cols = []
+                for col in continuous_cols:
+                    if col in df.columns:
+                        df[col] = df[col].astype("float64")
+                        converted_cols.append(col)
+
+                if converted_cols:
+                    self.logger.info(
+                        f"Converted {len(converted_cols)} continuous columns to float64: {', '.join(converted_cols)}"
+                    )
+            except Exception as err:
+                self.logger.warning(f"Failed to apply metadata conversions: {err}")
+
         return df
 
     @staticmethod
@@ -366,6 +396,12 @@ def _parse_args() -> argparse.Namespace:
         type=Path,
         help="Optional Tetrad knowledge file (.txt) with tiers / forbidden / required edges",
     )
+    parser.add_argument(
+        "--metadata",
+        required=False,
+        type=Path,
+        help="Optional metadata JSON file with column type information",
+    )
     return parser.parse_args()
 
 
@@ -385,7 +421,7 @@ def main() -> None:
     logger = logging.getLogger("main")
     try:
         pipeline = CausalDiscoveryPipeline(
-            args.config, args.data, args.output, args.knowledge
+            args.config, args.data, args.output, args.knowledge, args.metadata
         )
         pipeline.run()
     except Exception as err:
