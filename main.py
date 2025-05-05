@@ -85,7 +85,7 @@ BOOTSTRAP_PRESETS: Dict[str, Dict[str, Any]] = {
         "with_replacement": True,
         "add_original": True,
         "resampling_ensemble": 1,
-        "seed": 42,
+        # "seed": 42,
     },
     "jackknife90": {
         "numberResampling": 10,
@@ -93,7 +93,7 @@ BOOTSTRAP_PRESETS: Dict[str, Dict[str, Any]] = {
         "with_replacement": False,
         "add_original": True,
         "resampling_ensemble": 1,
-        "seed": 42,
+        # "seed": 42,
     },
 }
 
