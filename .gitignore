@@ -2,3 +2,6 @@
 data/*
 output/*
 *.pyc
+*.err
+*.out
+*.log
