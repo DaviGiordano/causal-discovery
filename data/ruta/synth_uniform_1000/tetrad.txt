@@ -1,0 +1,10 @@
+Graph Nodes:  
+X1;X2;X3;X4;X5;X6
+
+Edge. X1 --> X2
+Edge. X1 --> X3
+Edge. X2 --> X4
+Edge. X2 --> X5
+Edge. X3 --> X5
+Edge. X4 --> X6
+Edge. X5 --> X6

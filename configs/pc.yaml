@@ -5,4 +5,4 @@ test_params:
 algorithm_params:
     depth: 2
 bootstrap_strategy: bootstrap100
-num_threads: 1
+num_threads: 16

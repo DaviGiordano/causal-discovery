@@ -1,4 +1,7 @@
 .venv
-data/*
+*.csv
 output/*
 *.pyc
+*.err
+*.out
+*.log
