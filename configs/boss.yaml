@@ -1,0 +1,5 @@
+algorithm_name: boss
+score_name: conditional_gaussian_score
+score_params:
+    penalty_discount: 2
+bootstrap_strategy: bootstrap100

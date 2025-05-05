@@ -1,0 +1,8 @@
+algorithm_name: grasp
+test_name: conditional_gaussian_test
+test_params:
+    alpha: 0.05
+score_name: conditional_gaussian_score
+score_params:
+    penalty_discount: 2
+bootstrap_strategy: bootstrap100
