@@ -1,8 +1,19 @@
-algorithm_name: pc
-test_name: conditional_gaussian_test
-test_params:
-    alpha: 0.05
+algorithm_name: run_pc
 algorithm_params:
-    depth: 2
-bootstrap_strategy: bootstrap100
+    conflict_rule: 1
+    depth: -1
+    stable_fas: true
+    guarantee_cpdag: false
+test_name: use_degenerate_gaussian_test
+test_params:
+    alpha: 0.01
+    use_for_mc: False
+    singularity_lambda: 0.0
+bootstrap_params:
+    numberResampling: 10 # numberResampling=0 -> No bootstrapping
+    percent_resample_size: 100
+    add_original: true
+    with_replacement: true
+    resampling_ensemble: 3
+    seed: -1
 num_threads: 16

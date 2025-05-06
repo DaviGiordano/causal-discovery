@@ -1,9 +1,27 @@
-algorithm_name: grasp
-test_name: conditional_gaussian_test
+algorithm_name: run_grasp
+algorithm_params:
+    covered_depth: 4
+    singular_depth: 1
+    nonsingular_depth: 1
+    ordered_alg: false
+    raskutti_uhler: false
+    use_data_order: true
+    num_starts: 1
+test_name: use_degenerate_gaussian_test
 test_params:
-    alpha: 0.05
-score_name: conditional_gaussian_score
+    alpha: 0.01
+    use_for_mc: False
+    singularity_lambda: 0.0
+score_name: use_degenerate_gaussian_score
 score_params:
-    penalty_discount: 2
-bootstrap_strategy: bootstrap100
+    penalty_discount: 1
+    structure_prior: 0
+    singularity_lambda: 0.0
+bootstrap_params:
+    numberResampling: 10 # numberResampling=0 -> No bootstrapping
+    percent_resample_size: 100
+    add_original: true
+    with_replacement: true
+    resampling_ensemble: 3
+    seed: -1
 num_threads: 16

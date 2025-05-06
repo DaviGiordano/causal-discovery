@@ -1,6 +1,18 @@
-algorithm_name: dagma
-score_name: conditional_gaussian_score
+algorithm_name: run_dagma
+algorithm_params:
+    dagma_lambda: 0.05
+    w_threshold: 0.1
+    cpdag: true
+score_name: use_degenerate_gaussian_score
 score_params:
-    penalty_discount: 2
-bootstrap_strategy: bootstrap100
+    penalty_discount: 1
+    structure_prior: 0
+    singularity_lambda: 0.0
+bootstrap_params:
+    numberResampling: 10 # numberResampling=0 -> No bootstrapping
+    percent_resample_size: 100
+    add_original: true
+    with_replacement: true
+    resampling_ensemble: 3
+    seed: -1
 num_threads: 16

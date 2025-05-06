@@ -1,9 +1,4 @@
-algorithm_name: run_fges
-algorithm_params:
-    symmetric_first_step: false
-    max_degree: -1
-    parallelized: false
-    faithfulness_assumed: false
+algorithm_name: run_direct_lingam
 score_name: use_degenerate_gaussian_score
 score_params:
     penalty_discount: 1
