@@ -13,8 +13,8 @@ A lightweight Python interface around Tetrad that lets you run causal‐discover
 
 ```bash
 # Create and activate a virtual environment
-python -m venv venv
-source venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
 
 # Python deps
 pip install -r requirements.txt
