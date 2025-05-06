@@ -23,18 +23,31 @@ def main() -> None:
     setup_logging(str(log_file))
     logger = logging.getLogger("main")
 
-    try:
-        pipeline = CausalDiscovery(
-            args.config,
-            args.data,
-            args.output,
-            args.knowledge,
-            args.metadata,
-        )
-        pipeline.run()
-    except Exception as err:
-        logger.exception("Pipeline failed: %s", err)
-        sys.exit(1)
+    MAX_RETRIES = 2
+    retry_count = 0
+
+    while retry_count <= MAX_RETRIES:
+        try:
+            pipeline = CausalDiscovery(
+                args.config,
+                args.data,
+                args.output,
+                args.knowledge,
+                args.metadata,
+            )
+            pipeline.run()
+            break
+
+        except Exception as err:
+            retry_count += 1
+            if retry_count <= MAX_RETRIES:
+                logger.warning(
+                    f"Pipeline failed (attempt {retry_count}/{MAX_RETRIES}): {err}. Retrying..."
+                )
+                time.sleep(2)  # Add a small delay before retrying
+            else:
+                logger.exception(f"Pipeline failed after {MAX_RETRIES} retries: {err}")
+                sys.exit(1)
 
 
 if __name__ == "__main__":
