@@ -18,11 +18,17 @@ source venv/bin/activate
 
 # Python deps
 pip install -r requirements.txt
-
-# Tell JPype where to find the JDK
-export JAVA_HOME=/path/to/jdk
-export PATH="$JAVA_HOME/bin:$PATH"
 ```
+
+If you don't have the JDK, use SDKMAN to install it easily:
+```bash
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install java 
+sdk default java 17.0.2-open #or your version
+echo $JAVA_HOME
+```
+If `$JAVA_HOME` is blank, try `sdk use java 21.0.7-tem` (use your version)
 
 
 ## 2  Configuration
@@ -46,7 +52,11 @@ Optional inputs:
 
 
 ## 3  Running the pipeline
+```bash
+source scripts/run_example.sh
 
+```
+which runs:
 ```bash
 python main.py \
   --config   configs/boss.yaml \
