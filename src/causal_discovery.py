@@ -258,6 +258,13 @@ class CausalDiscovery:
         dot_str = search.get_dot()  # Clean DOT for GUI tools
 
         dot_path = output_path.with_suffix(".dot")
+        # Create a DOT file without labels by removing label attributes
+        clean_dot_str = dot_str
+        # Replace label attributes in the DOT file
+        import re
+
+        clean_dot_str = re.sub(r'label="[^"]*"(,\s*)', "", clean_dot_str)
+        clean_dot_path = output_path.parent / f"{output_path.stem}_clean.dot"
 
         try:
             logger.info("Writing Tetrad graph to %s", output_path)
@@ -268,9 +275,13 @@ class CausalDiscovery:
             with dot_path.open("w", encoding="utf-8") as fh_dot:
                 fh_dot.write(dot_str)
 
+            logger.info("Writing clean DOT graph to %s", clean_dot_path)
+            with clean_dot_path.open("w", encoding="utf-8") as fh_clean:
+                fh_clean.write(clean_dot_str)
+
             logger.info("Successfully saved graph output")
         except Exception as err:
             logger.error("Failed to write graph output: %s", err)
             raise RuntimeError(
-                f"Unable to write graph outputs ('{output_path}', '{dot_path}'): {err}"
+                f"Unable to write graph outputs ('{output_path}', '{dot_path}', '{clean_dot_path}'): {err}"
             ) from err
