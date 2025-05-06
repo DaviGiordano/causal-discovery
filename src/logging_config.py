@@ -36,5 +36,10 @@ LOGGING_CONFIG = {
 
 
 def setup_logging(logging_fpath: str):
-    LOGGING_CONFIG["handlers"]["file"]["filename"] = logging_fpath
-    logging.config.dictConfig(LOGGING_CONFIG)
+    try:
+        LOGGING_CONFIG["handlers"]["file"]["filename"] = logging_fpath
+        logging.config.dictConfig(LOGGING_CONFIG)
+    except Exception:
+        logging.basicConfig(
+            level=logging.INFO, format="%(levelname)s:%(name)s: %(message)s"
+        )
