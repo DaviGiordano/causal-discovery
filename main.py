@@ -13,7 +13,6 @@ from src.causal_discovery import CausalDiscovery
 from src.load_parse import load_yaml, parse_args
 from src.logging_config import setup_logging
 from src.pytetrad.TetradSearch import TetradSearch
-from src.default_params import BOOTSTRAP_PRESETS, SCORE_METHODS, TEST_METHODS
 
 
 def main() -> None:

@@ -12,7 +12,6 @@ import pandas as pd
 from src.load_parse import load_data, load_yaml
 from src.logging_config import setup_logging
 from src.pytetrad.TetradSearch import TetradSearch
-from src.default_params import BOOTSTRAP_PRESETS, SCORE_METHODS, TEST_METHODS
 
 logger = logging.getLogger(__name__)
 
@@ -105,31 +104,27 @@ class CausalDiscovery:
         # Configure test component
         test_name = self.configuration.get("test_name")
         if test_name:
-            self.final_test = self._configure_component(
+            self.final_test = self._configure_test_or_score(
                 self.search,
                 test_name,
                 self.configuration.get("test_params"),
-                TEST_METHODS,
             )
 
         # Configure score component
         score_name = self.configuration.get("score_name")
         if score_name:
             logger.info("Configuring score component: %s", score_name)
-            self.final_score = self._configure_component(
+            self.final_score = self._configure_test_or_score(
                 self.search,
                 score_name,
                 self.configuration.get("score_params"),
-                SCORE_METHODS,
             )
-
         # Configure bootstrap
-        bootstrap_strategy = self.configuration.get("bootstrap_strategy")
-        if bootstrap_strategy:
-            logger.info("Configuring bootstrap strategy: %s", bootstrap_strategy)
+        bootstrap_params = self.configuration.get("bootstrap_params")
+        if bootstrap_params:
+            logger.info("Configuring bootstrap")
             self.final_bootstrap = self._configure_bootstrap(
-                self.search,
-                bootstrap_strategy,
+                self.search, bootstrap_params
             )
 
     @staticmethod
@@ -182,78 +177,75 @@ class CausalDiscovery:
         return final_knowledge
 
     @staticmethod
-    def _configure_component(
+    def _configure_test_or_score(
         search: TetradSearch,
         name: Optional[str],
-        user_params: Optional[Dict[str, Any]],
-        registry: Dict[str, Dict[str, Any]],
+        params: Optional[Dict[str, Any]],
     ) -> Optional[Dict[str, Any]]:
         """Configure a test or score component with the given parameters."""
         if not name:
             return None
 
-        key = name.lower()
-        if key not in registry:
-            logger.error("Invalid component: %s not in %s", key, list(registry.keys()))
-            raise ValueError(f"Unsupported method '{name}'. Choices: {list(registry)}")
+        valid_names = [
+            "use_fisher_z",
+            "use_conditional_gaussian_test",
+            "use_degenerate_gaussian_test",
+            "use_conditional_gaussian_score",
+            "use_degenerate_gaussian_score",
+        ]
 
-        meta = registry[key]
-        final_params = {**meta["default_params"], **(user_params or {})}
+        if name not in valid_names:
+            raise ValueError(
+                f"Unsupported method '{name}'. Choices: {list(valid_names)}"
+            )
 
-        logger.info("Configuring %s with params: %s", meta["func_name"], final_params)
-        getattr(search, meta["func_name"])(**final_params)
+        logger.info("Configuring %s with params: %s", name, params)
+        try:
+            getattr(search, name)(**params)
+        except Exception as err:
+            logger.error(f"Setting {name} failed: {err}")
+            raise RuntimeError(f"Unable to setup '{name}': {err}") from err
 
-        return {"name": key, **final_params}
+        return {"name": name, **params}
 
     @staticmethod
     def _configure_bootstrap(
-        search: TetradSearch, strategy: Optional[str]
+        search: TetradSearch, params: Optional[Dict[str, Any]]
     ) -> Optional[Dict[str, Any]]:
-        """Configure bootstrap settings based on predefined strategies."""
-        if not strategy:
+        """Configure bootstrap settings using direct parameters from configuration."""
+        if not params:
             return None
 
-        key = strategy.lower()
-        if key not in BOOTSTRAP_PRESETS:
-            logger.error("Invalid bootstrap strategy: %s", key)
-            raise ValueError(
-                f"Bootstrap strategy '{strategy}' not implemented. Choices: {list(BOOTSTRAP_PRESETS)}"
-            )
-
-        params = BOOTSTRAP_PRESETS[key]
         logger.info("Configuring bootstrap with params: %s", params)
         search.set_bootstrapping(**params)
 
-        return {"strategy": key, **params}
+        return {"bootstrap_params": params}
 
     @staticmethod
     def _run_algorithm(search: TetradSearch, name: str, params: Dict[str, Any]) -> None:
         """Execute the selected causal discovery algorithm."""
+
+        valid_names = [
+            "run_pc",
+            "run_grasp",
+            "run_dagma",
+            "run_boss",
+            "run_fges",
+            "run_directlingam",
+        ]
+
+        if name not in valid_names:
+            raise ValueError(
+                f"Unsupported method '{name}'. Choices: {list(valid_names)}"
+            )
+
         logger.info("Running algorithm %s with params: %s", name, params)
-
         try:
-            if name == "pc":
-                search.run_pc(**params)
-            elif name == "fges":
-                search.run_fges(**params)
-            elif name == "fci":
-                search.run_fci(**params)
-            elif name == "grasp":
-                search.run_grasp(**params)
-            elif name == "boss":
-                search.run_boss(**params)
-            elif name == "dagma":
-                search.run_dagma(**params)
-            elif name == "directlingam":
-                search.run_direct_lingam(**params)
-            else:
-                logger.error("Unsupported algorithm: %s", name)
-                raise ValueError(f"Unsupported algorithm_name '{name}'.")
-
+            getattr(search, name)(**params)
             logger.info("Algorithm %s completed successfully", name)
         except Exception as err:
-            logger.error("Algorithm %s failed: %s", name, err)
-            raise
+            logger.error(f"Algorithm {name} failed: {err}")
+            raise RuntimeError(f"Unable to run algorithm '{name}': {err}") from err
 
     @staticmethod
     def _save_graph(
