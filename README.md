@@ -33,14 +33,29 @@ If `$JAVA_HOME` is blank, try `sdk use java 21.0.7-tem` (use your version)
 
 ## 2  Configuration
 
-All runtime options live in the YAML files under **`configs/`**.
+All runtime options live in the YAML files under **`configs/`**. To eliminate bootstrapping, just set `numberResampling` to 0. 
+
+Verify the valid `algorithm_names`, `test_names` and `score_names` in `causal_discovery.py`. Feel free to add any new methods in `TetradSearch.py`.
 
 ```yaml
-algorithm_name: boss # fges | pc | grasp | boss | dagma | directlingam ...
-score_name: conditional_gaussian_score # see src/default_params.py
-score_params:
-  penalty_discount: 2
-bootstrap_strategy: bootstrap100  # jackknife90, (see defaults)
+algorithm_name: run_pc
+algorithm_params:
+    conflict_rule: 1
+    depth: -1
+    stable_fas: true
+    guarantee_cpdag: false
+test_name: use_degenerate_gaussian_test
+test_params:
+    alpha: 0.01
+    use_for_mc: False
+    singularity_lambda: 0.0
+bootstrap_params:
+    numberResampling: 10
+    percent_resample_size: 100
+    add_original: true
+    with_replacement: true
+    resampling_ensemble: 3
+    seed: -1
 num_threads: 16
 ```
 
@@ -56,14 +71,14 @@ Optional inputs:
 source scripts/run_example.sh
 
 ```
-which runs:
+which runs a test for boss and direct_lingam. Here is an example call:
 ```bash
-python main.py \
-  --config   configs/boss.yaml \
-  --data     data/my_dataset.csv \
-  --output   output/graph.txt \
-  --knowledge data/knowledge.txt \
-  --metadata  data/metadata.json
+python3 main.py \
+    --config  "configs/boss.yaml" \
+    --data data/example_mixed/Xy_train.csv \
+    --output "output/example_output/boss/output.txt" \
+    --knowledge data/example_mixed/knowledge.txt \
+    --metadata data/example_mixed/metadata.json
 ```
 
 
@@ -74,7 +89,6 @@ python main.py \
 2. **`src/causal_discovery.py`** Configures and runs Causal Discovery:
 
    * builds a `CausalDiscovery`,
-   * pulls default hyper‑parameters from **`src/default_params.py`**,
    * hands control to **`TetradSearch`** (JPype wrapper).
 3. **JPype** starts a JVM using `JAVA_HOME` and loads **`tetrad-current.jar`** (bundled in *src/pytetrad/resources/*).
 4. The selected Tetrad algorithm (FGES, PC, BOSS, etc.) fits to the pandas DataFrame.
