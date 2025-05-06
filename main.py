@@ -16,11 +16,6 @@ from src.pytetrad.TetradSearch import TetradSearch
 from src.default_params import BOOTSTRAP_PRESETS, SCORE_METHODS, TEST_METHODS
 
 
-# ---------------------------------------------------------------------------
-# CLI helpers
-# ---------------------------------------------------------------------------
-
-
 def main() -> None:
     args = parse_args()
     args.output.expanduser().resolve().parent.mkdir(parents=True, exist_ok=True)
