@@ -231,7 +231,7 @@ class CausalDiscovery:
             "run_dagma",
             "run_boss",
             "run_fges",
-            "run_directlingam",
+            "run_direct_lingam",
         ]
 
         if name not in valid_names:
