@@ -429,7 +429,7 @@
             "discrete": false
         },
         {
-            "name": "y",
+            "name": "income",
             "discrete": false
         }
     ]

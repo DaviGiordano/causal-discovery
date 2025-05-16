@@ -2,7 +2,7 @@
 addtemporal
 
 0*  age native-country race sex
-1  capital-gain capital-loss education education-num hours-per-week marital-status occupation relationship workclass y
+1  capital-gain capital-loss education education-num hours-per-week marital-status occupation relationship workclass income
 
 forbiddirect
 

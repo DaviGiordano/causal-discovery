@@ -53,7 +53,7 @@
             "discrete": true
         },
         {
-            "name": "y",
+            "name": "income",
             "discrete": true
         }
     ]
